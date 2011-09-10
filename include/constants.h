@@ -19,6 +19,5 @@ public:
 
 const string Constant::CODE = "003";
 
-
 #endif	/* CONSTANTS_H */
 

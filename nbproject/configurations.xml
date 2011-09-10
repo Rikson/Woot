@@ -12,10 +12,15 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>parser/DocumentBuilderFactory.cpp</itemPath>
+      <itemPath>include/FileManager.cpp</itemPath>
+      <itemPath>parser/PlainTextDocument.cpp</itemPath>
+      <itemPath>parser/WikiDocument.cpp</itemPath>
       <itemPath>include/constants.h</itemPath>
       <itemPath>falcon.cpp</itemPath>
       <itemPath>dictionary/iDictionary.h</itemPath>
       <itemPath>parser/iDocument.h</itemPath>
+      <itemPath>parser/iDocumentBuilder.h</itemPath>
       <itemPath>indexer/iIndexer.h</itemPath>
       <itemPath>parser/iParser.h</itemPath>
       <itemPath>retriever/iRetriever.h</itemPath>

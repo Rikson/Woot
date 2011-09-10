@@ -34,7 +34,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/falcon.o
+	${OBJECTDIR}/include/FileManager.o \
+	${OBJECTDIR}/parser/PlainTextDocument.o \
+	${OBJECTDIR}/falcon.o \
+	${OBJECTDIR}/parser/DocumentBuilderFactory.o \
+	${OBJECTDIR}/parser/WikiDocument.o
 
 
 # C Compiler Flags
@@ -61,10 +65,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/include/FileManager.o: include/FileManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/FileManager.o include/FileManager.cpp
+
+${OBJECTDIR}/parser/PlainTextDocument.o: parser/PlainTextDocument.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/PlainTextDocument.o parser/PlainTextDocument.cpp
+
 ${OBJECTDIR}/falcon.o: falcon.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/falcon.o falcon.cpp
+
+${OBJECTDIR}/parser/DocumentBuilderFactory.o: parser/DocumentBuilderFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/DocumentBuilderFactory.o parser/DocumentBuilderFactory.cpp
+
+${OBJECTDIR}/parser/WikiDocument.o: parser/WikiDocument.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiDocument.o parser/WikiDocument.cpp
 
 # Subprojects
 .build-subprojects:
