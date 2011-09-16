@@ -12,10 +12,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>parser/Document.h</itemPath>
       <itemPath>parser/DocumentBuilderFactory.cpp</itemPath>
-      <itemPath>include/FileManager.cpp</itemPath>
-      <itemPath>parser/PlainTextDocument.cpp</itemPath>
-      <itemPath>parser/WikiDocument.cpp</itemPath>
+      <itemPath>include/FileManager.h</itemPath>
+      <itemPath>parser/PlainTextDocument.h</itemPath>
+      <itemPath>parser/PlainTextParser.cpp</itemPath>
+      <itemPath>parser/WikiDocument.h</itemPath>
+      <itemPath>parser/WikiParser.cpp</itemPath>
       <itemPath>include/constants.h</itemPath>
       <itemPath>falcon.cpp</itemPath>
       <itemPath>dictionary/iDictionary.h</itemPath>
@@ -48,6 +51,11 @@
         <compilerSet>default</compilerSet>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>/usr/include/boost_1_47_0</pElem>
+          </incDir>
+        </ccTool>
       </compileType>
     </conf>
     <conf name="Release" type="1">

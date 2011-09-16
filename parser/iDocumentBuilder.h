@@ -6,6 +6,7 @@
  */
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 
@@ -14,9 +15,11 @@ using namespace std;
 
 class iDocumentBuilder {
 public:
+    typedef boost::shared_ptr<iDocumentBuilder> iDocBlr;
+
     virtual ~iDocumentBuilder () {}
     
-    virtual iDocument* build (string filepath) = 0;
+    virtual iDocument::iDoc build (string filepath) = 0;
 }; 
 
 #endif	/* IDOCUMENTBUILDER_H */

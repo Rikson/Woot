@@ -34,11 +34,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/include/FileManager.o \
-	${OBJECTDIR}/parser/PlainTextDocument.o \
+	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
-	${OBJECTDIR}/parser/DocumentBuilderFactory.o \
-	${OBJECTDIR}/parser/WikiDocument.o
+	${OBJECTDIR}/parser/WikiParser.o \
+	${OBJECTDIR}/parser/DocumentBuilderFactory.o
 
 
 # C Compiler Flags
@@ -65,30 +64,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/include/FileManager.o: include/FileManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/include
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/FileManager.o include/FileManager.cpp
-
-${OBJECTDIR}/parser/PlainTextDocument.o: parser/PlainTextDocument.cpp 
+${OBJECTDIR}/parser/PlainTextParser.o: parser/PlainTextParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/PlainTextDocument.o parser/PlainTextDocument.cpp
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/PlainTextParser.o parser/PlainTextParser.cpp
 
 ${OBJECTDIR}/falcon.o: falcon.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/falcon.o falcon.cpp
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/falcon.o falcon.cpp
+
+${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
 
 ${OBJECTDIR}/parser/DocumentBuilderFactory.o: parser/DocumentBuilderFactory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/DocumentBuilderFactory.o parser/DocumentBuilderFactory.cpp
-
-${OBJECTDIR}/parser/WikiDocument.o: parser/WikiDocument.cpp 
-	${MKDIR} -p ${OBJECTDIR}/parser
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiDocument.o parser/WikiDocument.cpp
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/DocumentBuilderFactory.o parser/DocumentBuilderFactory.cpp
 
 # Subprojects
 .build-subprojects:

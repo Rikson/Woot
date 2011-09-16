@@ -7,6 +7,9 @@
 #include <string>
 #include "iDocument.h"
 #include "iDocumentBuilder.h"
+#include "../include/FileManager.h"
+#include "PlainTextDocument.h"
+#include "WikiDocument.h"
 
 using namespace std;
 
@@ -16,8 +19,10 @@ public:
     PlainTextDocumentBuilder() {
     }
 
-    iDocument* build(string filepath) {
-
+    iDocument::iDoc build(string filepath) {
+        string contents = FileManager::getFile (filepath);
+        
+        return iDocument::iDoc(new PlainTextDocument (filepath, contents));
     }
 };
 
@@ -27,8 +32,10 @@ public:
     WikiDocumentBuilder() {
     }
 
-    iDocument* build(string filepath) {
-
+    iDocument::iDoc build(string filepath) {
+        string contents = FileManager::getFile (filepath);
+        
+        return iDocument::iDoc(new WikiDocument (filepath, contents));
     }
 };
 

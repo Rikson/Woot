@@ -24,7 +24,7 @@ class iParser {
 public:
     virtual ~iParser () {}
     
-    virtual vector<string> parse (iDocument document) = 0;
+    virtual vector<string> parse (iDocument::iDoc document) = 0;
 };
 
 #endif	/* IPARSER_H */
