@@ -13,7 +13,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>parser/Document.h</itemPath>
-      <itemPath>parser/DocumentBuilderFactory.cpp</itemPath>
+      <itemPath>parser/DocumentBuilderFactory.h</itemPath>
       <itemPath>include/FileManager.h</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>

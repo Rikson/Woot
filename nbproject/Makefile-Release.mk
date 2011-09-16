@@ -36,8 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
-	${OBJECTDIR}/parser/WikiParser.o \
-	${OBJECTDIR}/parser/DocumentBuilderFactory.o
+	${OBJECTDIR}/parser/WikiParser.o
 
 
 # C Compiler Flags
@@ -78,11 +77,6 @@ ${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
-
-${OBJECTDIR}/parser/DocumentBuilderFactory.o: parser/DocumentBuilderFactory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/parser
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/DocumentBuilderFactory.o parser/DocumentBuilderFactory.cpp
 
 # Subprojects
 .build-subprojects:

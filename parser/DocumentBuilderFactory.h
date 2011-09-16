@@ -1,3 +1,10 @@
+/* 
+ * File:   DocumentBuilderFactory.h
+ * Author: rikson
+ *
+ * Created on September 16, 2011, 3:14 AM
+ */
+
 /**
  * Document Builder.
  * 
@@ -10,6 +17,7 @@
 #include "../include/FileManager.h"
 #include "PlainTextDocument.h"
 #include "WikiDocument.h"
+
 
 using namespace std;
 
@@ -53,25 +61,32 @@ private:
 
 public:
 
-    enum DocumentTypes {
+    static enum DocumentTypes {
         plaintxt,
         wiki
-    };
+    } types;
 
     /**
      * Returns an appropriate <code>iDocumentBuilder</code> for the given type document type.
      * @param type
      * @return 
      */
-    static iDocumentBuilder* getDocumentBuilder(DocumentTypes type) {
+    static iDocumentBuilder::iDocBlr getDocumentBuilder(int type) {
+        cout << "Getting document builder corresponding to : " << type << endl;
         switch (type) {
             case plaintxt:
-                return new PlainTextDocumentBuilder();
+                return iDocumentBuilder::iDocBlr(new PlainTextDocumentBuilder());
             case wiki:
-                return new WikiDocumentBuilder();
+                return iDocumentBuilder::iDocBlr(new WikiDocumentBuilder());
         }
-
-        return NULL;
     }
 
 };
+
+#ifndef DOCUMENTBUILDERFACTORY_H
+#define	DOCUMENTBUILDERFACTORY_H
+
+
+
+#endif	/* DOCUMENTBUILDERFACTORY_H */
+

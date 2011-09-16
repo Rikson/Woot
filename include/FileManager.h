@@ -31,7 +31,7 @@ public:
 };
 
 string FileManager::getFile(string filepath) {
-    return "file";
+    return "This is the first sample data for Woot parser. Here we go.";
 }
 
 #endif	/* FILEMANAGER_H */

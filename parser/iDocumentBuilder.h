@@ -7,6 +7,7 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "iDocument.h"
 
 using namespace std;
 

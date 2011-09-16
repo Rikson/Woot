@@ -15,6 +15,7 @@ using namespace std;
 class Constant {
 public:
     static const string CODE;
+    
 };
 
 const string Constant::CODE = "003";

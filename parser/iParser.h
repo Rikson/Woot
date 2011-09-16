@@ -22,9 +22,36 @@ using namespace std;
 
 class iParser {
 public:
-    virtual ~iParser () {}
-    
-    virtual vector<string> parse (iDocument::iDoc document) = 0;
+    typedef boost::shared_ptr<iParser> iPsr;
+
+    virtual ~iParser() {
+    }
+
+    virtual vector<string> parse(iDocument::iDoc document) = 0;
+};
+
+class PlainTextParser : public iParser {
+public:
+
+    PlainTextParser() {
+
+    }
+
+    vector<string> parse(iDocument::iDoc document);
+
+protected:
+
+    static enum States {
+        start,
+        wordify,
+        filter,
+        tokenize,
+        end
+    } states;
+
+    vector<string> parse(string text);
+
+    vector<string> wordifyText(string text);
 };
 
 #endif	/* IPARSER_H */

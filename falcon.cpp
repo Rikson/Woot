@@ -7,8 +7,13 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "include/constants.h"
+#include "parser/iDocumentBuilder.h"
+#include "parser/iDocument.h"
+#include "parser/DocumentBuilderFactory.h"
+#include "parser/iParser.h"
 
 using namespace std;
 
@@ -28,6 +33,17 @@ int main(int argc, char** argv) {
         cout << endl << "Please be patient with us while we are still Wooting!" << endl;
     } else {
         cout << "CODE mismatch!" << endl;
+    }
+    
+    iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(0);
+    iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build("./sampledata.txt");
+    PlainTextParser* plainTextParser = new PlainTextParser ();
+    vector<string> result = plainTextParser->parse(plainTextDocument);
+    
+    vector<string>::const_iterator itr = result.begin();
+    while (itr != result.end()) {
+        cout << *itr << endl;
+        itr++;
     }
 
     return 0;
