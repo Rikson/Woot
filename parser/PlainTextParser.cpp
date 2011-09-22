@@ -10,6 +10,8 @@
 #include <map>
 
 #include "iParser.h"
+#include "iTransformer.h"
+#include "iFilter.h"
 #include "PlainTextDocument.h"
 
 vector<string> PlainTextParser::parse(iDocument::iDoc document) {
@@ -27,7 +29,6 @@ vector<string> PlainTextParser::parse(const string text) {
     vector<string> result;
 
     string word;
-    string filteredWord;
     string token;
     int index;
     int state = start;
@@ -40,12 +41,15 @@ vector<string> PlainTextParser::parse(const string text) {
             case wordify:
                 word = this->getNextWord(text, index);
                 index += word.length() + 1;
-                
+
                 if (word.empty()) continue;
+
+            case transform:
+                word = this->transformWord(word);
+
             case filter:
-                filteredWord = this->applyFilters(word);
-                
-                if (filteredWord.empty()) continue;
+                if (this->filterWord(word)) continue;
+
             case tokenize:
                 token = word;
             case end:
@@ -93,14 +97,32 @@ string PlainTextParser::getNextWord(const string &text, int index) {
 }
 
 /**
+ * Transforms the given word to a desired form.
+ * @param word
+ * @return 
+ */
+string PlainTextParser::transformWord(string word) {
+    string transformedWord = word;
+    for (int i = 0; i < this->transformers.size(); i++) {
+        transformedWord = this->transformers[i]->transform(transformedWord);
+    }
+    
+    return transformedWord;
+}
+
+/**
  * Applies a set of filters to the given word.
- * For ex: Converts all words to lower case, removes stop words.
+ * For ex: removes stop words.
  * 
  * @param word
  * @return 
  */
-string PlainTextParser::applyFilters(const string word) {
-    return word;
+bool PlainTextParser::filterWord(const string word) {
+    for (int i = 0; i < this->filters.size(); i++) {
+        if (this->filters[i]->filter(word)) return true;
+    }
+    
+    return false;
 }
 
 /**

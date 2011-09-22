@@ -15,8 +15,10 @@
       <itemPath>parser/Document.h</itemPath>
       <itemPath>parser/DocumentBuilderFactory.h</itemPath>
       <itemPath>include/FileManager.h</itemPath>
+      <itemPath>parser/transformer/LowerCaseTransformer.cpp</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
+      <itemPath>parser/filter/StopWordFilter.cpp</itemPath>
       <itemPath>parser/WikiDocument.h</itemPath>
       <itemPath>parser/WikiParser.cpp</itemPath>
       <itemPath>include/constants.h</itemPath>
@@ -24,11 +26,13 @@
       <itemPath>dictionary/iDictionary.h</itemPath>
       <itemPath>parser/iDocument.h</itemPath>
       <itemPath>parser/iDocumentBuilder.h</itemPath>
+      <itemPath>parser/iFilter.h</itemPath>
       <itemPath>indexer/iIndexer.h</itemPath>
       <itemPath>parser/iParser.h</itemPath>
       <itemPath>retriever/iRetriever.h</itemPath>
       <itemPath>parser/tokenizer/iToken.h</itemPath>
       <itemPath>parser/tokenizer/iTokenizer.h</itemPath>
+      <itemPath>parser/iTransformer.h</itemPath>
       <itemPath>include/utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"

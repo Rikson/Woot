@@ -34,9 +34,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o \
 	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
-	${OBJECTDIR}/parser/WikiParser.o
+	${OBJECTDIR}/parser/WikiParser.o \
+	${OBJECTDIR}/parser/filter/StopWordFilter.o
 
 
 # C Compiler Flags
@@ -63,6 +65,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o: parser/transformer/LowerCaseTransformer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser/transformer
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o parser/transformer/LowerCaseTransformer.cpp
+
 ${OBJECTDIR}/parser/PlainTextParser.o: parser/PlainTextParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
@@ -77,6 +84,11 @@ ${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
+
+${OBJECTDIR}/parser/filter/StopWordFilter.o: parser/filter/StopWordFilter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser/filter
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/filter/StopWordFilter.o parser/filter/StopWordFilter.cpp
 
 # Subprojects
 .build-subprojects:

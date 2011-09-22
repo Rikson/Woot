@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 #include "iDocument.h"
+#include "iTransformer.h"
+#include "iFilter.h"
 
 #ifndef IPARSER_H
 #define	IPARSER_H
@@ -31,10 +33,15 @@ public:
 };
 
 class PlainTextParser : public iParser {
+private:
+    vector<iTransformer::iTfr> transformers;
+    
+    vector<iFilter::iFlr> filters;
 public:
 
-    PlainTextParser() {
-
+    PlainTextParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters) {
+        this->transformers = transformers;
+        this->filters = filters;
     }
 
     vector<string> parse(iDocument::iDoc document);
@@ -44,6 +51,7 @@ protected:
     static enum States {
         start,
         wordify,
+        transform,
         filter,
         tokenize,
         end
@@ -59,16 +67,18 @@ protected:
     vector<string> parse(const string text);
 
     string getNextWord(const string &text, int index);
-    
-    string applyFilters (const string word);
-    
-    int wordDelimiter (const char c);
+
+    string transformWord(string word);
+
+    bool filterWord(const string word);
+
+    int wordDelimiter(const char c);
 };
 
 class WikiParser : public PlainTextParser {
 public:
 
-    WikiParser() {
+    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters) : PlainTextParser(transformers, filters) {
 
     }
 
