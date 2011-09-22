@@ -49,8 +49,30 @@ protected:
         end
     } states;
 
-    vector<string> parse(string text);
+    static enum WordDelimitters {
+        space,
+        comma,
+        period,
+        newline
+    } wordDelimitters;
 
+    vector<string> parse(const string text);
+
+    string getNextWord(const string &text, int index);
+    
+    string applyFilters (const string word);
+    
+    int wordDelimiter (const char c);
+};
+
+class WikiParser : public PlainTextParser {
+public:
+
+    WikiParser() {
+
+    }
+
+protected:
     vector<string> wordifyText(string text);
 };
 

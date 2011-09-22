@@ -72,7 +72,7 @@ public:
      * @return 
      */
     static iDocumentBuilder::iDocBlr getDocumentBuilder(int type) {
-        cout << "Getting document builder corresponding to : " << type << endl;
+        cout << "Getting document builder ..." << endl;
         switch (type) {
             case plaintxt:
                 return iDocumentBuilder::iDocBlr(new PlainTextDocumentBuilder());

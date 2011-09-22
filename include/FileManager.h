@@ -31,7 +31,9 @@ public:
 };
 
 string FileManager::getFile(string filepath) {
-    return "This is the first sample data for Woot parser. Here we go.";
+    return "This is the first sample data for Woot parser. Here we go."
+            "\n"
+            "Created by Abhishek, Rikson and Vivek";
 }
 
 #endif	/* FILEMANAGER_H */

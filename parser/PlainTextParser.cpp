@@ -7,6 +7,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <map>
 
 #include "iParser.h"
 #include "PlainTextDocument.h"
@@ -15,42 +16,109 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
     return this->parse(document->getContents());
 }
 
-vector<string> PlainTextParser::parse(string text) {
+/**
+ * State machine.
+ * 
+ * Parses the given text and generates a list of tokens.
+ * @param text
+ * @return 
+ */
+vector<string> PlainTextParser::parse(const string text) {
     vector<string> result;
 
+    string word;
+    string filteredWord;
+    string token;
+    int index;
     int state = start;
-    switch (state) {
-        case start:
 
-        case wordify:
-            result = this->wordifyText(text);
-        case filter:
-
-        case tokenize:
-
-        case end:
-
-        default:
-            break;
+    for (index = 0; index < text.length();) {
+        switch (state) {
+            case start:
+                word = "";
+                token = "";
+            case wordify:
+                word = this->getNextWord(text, index);
+                index += word.length() + 1;
+                
+                if (word.empty()) continue;
+            case filter:
+                filteredWord = this->applyFilters(word);
+                
+                if (filteredWord.empty()) continue;
+            case tokenize:
+                token = word;
+            case end:
+                result.push_back(word);
+            default:
+                break;
+        }
     }
 
     return result;
 }
 
-vector<string> PlainTextParser::wordifyText(string text) {
-    vector<string> result;
-    string WORD_DELIMITERS = " ,.";
+/**
+ * State Machine to parse and extract the next 'word' from the input stream.
+ * 
+ * @param text
+ * @param index
+ * @return 
+ */
+string PlainTextParser::getNextWord(const string &text, int index) {
+    string w = "";
 
-    char * buffer = new char [text.length() + 1]; //Copy input text to a buffer.
-    strcpy(buffer, text.c_str());
+    while (true) {
+        if (index >= text.length()) {
+            return w;
+        }
 
-    char * word = strtok(buffer, WORD_DELIMITERS.c_str());
-    while (word != NULL) {
-        result.push_back(word);
-        word = strtok(NULL, WORD_DELIMITERS.c_str());
+        const char c = text[index];
+        int state = PlainTextParser::wordDelimiter(c);
+
+        switch (state) {
+            case space:
+
+            case comma:
+
+            case period:
+
+            case newline:
+                return w;
+            default:
+                w.append(text.substr(index, 1));
+                index++;
+        }
+    }
+}
+
+/**
+ * Applies a set of filters to the given word.
+ * For ex: Converts all words to lower case, removes stop words.
+ * 
+ * @param word
+ * @return 
+ */
+string PlainTextParser::applyFilters(const string word) {
+    return word;
+}
+
+/**
+ * Returns a <code>WordDelimiter</code> constant for the given character.
+ * @param c
+ * @return 
+ */
+int PlainTextParser::wordDelimiter(const char c) {
+    static map<char, int> delimiters;
+
+    delimiters[' '] = space;
+    delimiters[','] = comma;
+    delimiters['.'] = period;
+    delimiters['\n'] = newline;
+
+    if (delimiters.find(c) != delimiters.end()) {
+        return delimiters[c];
     }
 
-    delete[] buffer;
-    
-    return result;
+    return -1;
 }

@@ -24,18 +24,18 @@ int main(int argc, char** argv) {
     string code;
 
     cout << "Welcome to Falcon 1.0!" << endl;
-    cout << endl << "Please enter the CODE: ";
-
-    cin >> code;
-
-    if (code == Constant::CODE) {
-        cout << endl << "CODE match.";
-        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
-    } else {
-        cout << "CODE mismatch!" << endl;
-    }
+//    cout << endl << "Please enter the CODE: ";
+//
+//    cin >> code;
+//
+//    if (code == Constant::CODE) {
+//        cout << endl << "CODE match.";
+//        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
+//    } else {
+//        cout << "CODE mismatch!" << endl;
+//    }
     
-    iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(0);
+    iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
     iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build("./sampledata.txt");
     PlainTextParser* plainTextParser = new PlainTextParser ();
     vector<string> result = plainTextParser->parse(plainTextDocument);
