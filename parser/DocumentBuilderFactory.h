@@ -28,7 +28,8 @@ public:
     }
 
     iDocument::iDoc build(string filepath) {
-        string contents = FileManager::getFile (filepath);
+        FileManager fileManager;
+        string contents = fileManager.readFile(filepath);
         
         return iDocument::iDoc(new PlainTextDocument (filepath, contents));
     }
@@ -41,7 +42,8 @@ public:
     }
 
     iDocument::iDoc build(string filepath) {
-        string contents = FileManager::getFile (filepath);
+        FileManager fileManager;
+        string contents = fileManager.readFile(filepath);
         
         return iDocument::iDoc(new WikiDocument (filepath, contents));
     }
@@ -78,6 +80,8 @@ public:
                 return iDocumentBuilder::iDocBlr(new PlainTextDocumentBuilder());
             case wiki:
                 return iDocumentBuilder::iDocBlr(new WikiDocumentBuilder());
+            default:
+                break;
         }
     }
 

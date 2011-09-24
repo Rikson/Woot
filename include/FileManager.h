@@ -1,40 +1,39 @@
-/* 
- * File:   FileManager.h
- * Author: rikson
+/*
+ * FileManager.h
  *
- * Created on September 11, 2011, 7:45 PM
+ *  Created on: Sep 23, 2011
+ *      Author: vivek
  */
 
-/**
- * File manager.
- * 
- * Provides utility functions to manage file resources.
- */
+#ifndef FILEMANAGER_H_
+#define FILEMANAGER_H_
 
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <cstdlib>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-#ifndef FILEMANAGER_H
-#define	FILEMANAGER_H
-
-#include <string>
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ifstream;
+using std::string;
 
 using namespace std;
 
 class FileManager {
 
-    ~FileManager() {
-
-    }
-
 public:
+	FileManager();
+	virtual ~FileManager();
+	bool createFile(const string path, const string contents);
+	bool createDirectory(const string path);
+	string readFile(const string path);
+	bool writeFile(const string path,const string content);
+	void deleteFile(const string path);
 
-    static string getFile(string filepath);
 };
 
-string FileManager::getFile(string filepath) {
-    return "This is the first sample data for Woot parser. Here we go."
-            "\n"
-            "Created by Abhishek, Rikson and Vivek";
-}
-
-#endif	/* FILEMANAGER_H */
-
+#endif /* FILEMANAGER_H_ */

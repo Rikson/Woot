@@ -12,8 +12,11 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>distributedFileSystem/impl/DistributedFileSystem.cpp</itemPath>
+      <itemPath>distributedFileSystem/impl/DistributedFileSystemManager.cpp</itemPath>
       <itemPath>parser/Document.h</itemPath>
       <itemPath>parser/DocumentBuilderFactory.h</itemPath>
+      <itemPath>include/impl/FileManager.cpp</itemPath>
       <itemPath>include/FileManager.h</itemPath>
       <itemPath>parser/transformer/LowerCaseTransformer.cpp</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
@@ -24,6 +27,8 @@
       <itemPath>include/constants.h</itemPath>
       <itemPath>falcon.cpp</itemPath>
       <itemPath>dictionary/iDictionary.h</itemPath>
+      <itemPath>distributedFileSystem/iDistributedFileSystem.h</itemPath>
+      <itemPath>distributedFileSystem/iDistributedFileSystemManager.h</itemPath>
       <itemPath>parser/iDocument.h</itemPath>
       <itemPath>parser/iDocumentBuilder.h</itemPath>
       <itemPath>parser/iFilter.h</itemPath>

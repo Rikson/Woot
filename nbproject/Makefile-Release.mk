@@ -34,11 +34,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o \
 	${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o \
 	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
 	${OBJECTDIR}/parser/WikiParser.o \
-	${OBJECTDIR}/parser/filter/StopWordFilter.o
+	${OBJECTDIR}/include/impl/FileManager.o \
+	${OBJECTDIR}/parser/filter/StopWordFilter.o \
+	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystem.o
 
 
 # C Compiler Flags
@@ -65,6 +68,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o: distributedFileSystem/impl/DistributedFileSystemManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/distributedFileSystem/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o distributedFileSystem/impl/DistributedFileSystemManager.cpp
+
 ${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o: parser/transformer/LowerCaseTransformer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser/transformer
 	${RM} $@.d
@@ -85,10 +93,20 @@ ${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
 
+${OBJECTDIR}/include/impl/FileManager.o: include/impl/FileManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/impl/FileManager.o include/impl/FileManager.cpp
+
 ${OBJECTDIR}/parser/filter/StopWordFilter.o: parser/filter/StopWordFilter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser/filter
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/filter/StopWordFilter.o parser/filter/StopWordFilter.cpp
+
+${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystem.o: distributedFileSystem/impl/DistributedFileSystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/distributedFileSystem/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystem.o distributedFileSystem/impl/DistributedFileSystem.cpp
 
 # Subprojects
 .build-subprojects:

@@ -133,10 +133,17 @@ bool PlainTextParser::filterWord(const string word) {
 int PlainTextParser::wordDelimiter(const char c) {
     static map<char, int> delimiters;
 
+    delimiters['<'] = left_angular_bracket;
+    delimiters['>'] = right_angular_bracket;
+    delimiters[':'] = colon;
+    delimiters['!'] = exclamation;
     delimiters[' '] = space;
     delimiters[','] = comma;
     delimiters['.'] = period;
+    delimiters['\t'] = tab;
     delimiters['\n'] = newline;
+    delimiters['\r'] = carriage_return;
+    
 
     if (delimiters.find(c) != delimiters.end()) {
         return delimiters[c];

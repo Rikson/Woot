@@ -35,7 +35,7 @@ public:
 class PlainTextParser : public iParser {
 private:
     vector<iTransformer::iTfr> transformers;
-    
+
     vector<iFilter::iFlr> filters;
 public:
 
@@ -57,22 +57,30 @@ protected:
         end
     } states;
 
-    static enum WordDelimitters {
+    static enum Delimitters {
+        left_angular_bracket,
+        right_angular_bracket,
+        colon,
+        exclamation,
         space,
         comma,
         period,
-        newline
-    } wordDelimitters;
+        tab,
+        newline,
+        carriage_return
+    } delimitters;
 
-    vector<string> parse(const string text);
+    virtual vector<string> parse(const string text);
 
-    string getNextWord(const string &text, int index);
+    virtual string getNextWord(const string &text, int index);
 
-    string transformWord(string word);
+    virtual string transformWord(string word);
 
-    bool filterWord(const string word);
+    virtual bool filterWord(const string word);
 
     int wordDelimiter(const char c);
+    
+    vector<string> wordifyText(string text);
 };
 
 class WikiParser : public PlainTextParser {
@@ -81,9 +89,11 @@ public:
     WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters) : PlainTextParser(transformers, filters) {
 
     }
+    
+    vector<string> parse(iDocument::iDoc document);
 
 protected:
-    vector<string> wordifyText(string text);
+    vector<string> parse(const string text);
 };
 
 #endif	/* IPARSER_H */
