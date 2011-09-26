@@ -13,6 +13,7 @@
  */
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 #ifndef ITOKENIZER_H
 #define	ITOKENIZER_H
@@ -21,9 +22,26 @@ using namespace std;
 
 class iTokenizer {
 public:
-    virtual ~iTokenizer() {}
-    
-    virtual iToken tokenize (string text) = 0;
+    typedef boost::shared_ptr<iTokenizer> iTkz;
+
+    virtual ~iTokenizer() {
+    }
+
+    virtual string tokenize(string word) = 0;
+};
+
+class Tokenizer : public iTokenizer {
+public:
+
+    Tokenizer() {
+
+    }
+
+    string tokenize(string word);
+
+protected:
+
+    int getLastCharacterOffsetForStemming(string inputString);
 };
 
 

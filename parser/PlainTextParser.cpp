@@ -13,6 +13,7 @@
 #include "iTransformer.h"
 #include "iFilter.h"
 #include "PlainTextDocument.h"
+#include "tokenizer/iTokenizer.h"
 
 vector<string> PlainTextParser::parse(iDocument::iDoc document) {
     return this->parse(document->getContents());
@@ -38,7 +39,7 @@ vector<string> PlainTextParser::parse(const string text) {
             case start:
                 word = "";
                 token = "";
-            case wordify:
+            case interpret:
                 word = this->getNextWord(text, index);
                 index += word.length() + 1;
 
@@ -51,7 +52,7 @@ vector<string> PlainTextParser::parse(const string text) {
                 if (this->filterWord(word)) continue;
 
             case tokenize:
-                token = word;
+                token = this->tokenizeWord(word);
             case end:
                 result.push_back(word);
             default:
@@ -125,6 +126,10 @@ bool PlainTextParser::filterWord(const string word) {
     return false;
 }
 
+string PlainTextParser::tokenizeWord(const string word) {
+    return this->tokenizer->tokenize(word);
+}
+
 /**
  * Returns a <code>WordDelimiter</code> constant for the given character.
  * @param c
@@ -136,7 +141,15 @@ int PlainTextParser::wordDelimiter(const char c) {
     delimiters['<'] = left_angular_bracket;
     delimiters['>'] = right_angular_bracket;
     delimiters[':'] = colon;
+    delimiters['['] = left_square_bracket;
+    delimiters[']'] = right_square_bracket;
     delimiters['!'] = exclamation;
+    delimiters['-'] = hyphen;
+    delimiters['{'] = left_curly_brace;
+    delimiters['}'] = right_curly_brace;
+    delimiters['='] = equals;
+    delimiters['('] = left_parenthesis;
+    delimiters[')'] = right_parenthesis;
     delimiters[' '] = space;
     delimiters[','] = comma;
     delimiters['.'] = period;

@@ -22,6 +22,7 @@
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
       <itemPath>parser/filter/StopWordFilter.cpp</itemPath>
+      <itemPath>parser/tokenizer/impl/Tokenizer.cpp</itemPath>
       <itemPath>parser/WikiDocument.h</itemPath>
       <itemPath>parser/WikiParser.cpp</itemPath>
       <itemPath>include/constants.h</itemPath>

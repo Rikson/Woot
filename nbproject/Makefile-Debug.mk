@@ -39,6 +39,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
 	${OBJECTDIR}/parser/WikiParser.o \
+	${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o \
 	${OBJECTDIR}/include/impl/FileManager.o \
 	${OBJECTDIR}/parser/filter/StopWordFilter.o \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystem.o
@@ -92,6 +93,11 @@ ${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
+
+${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o: parser/tokenizer/impl/Tokenizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser/tokenizer/impl
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o parser/tokenizer/impl/Tokenizer.cpp
 
 ${OBJECTDIR}/include/impl/FileManager.o: include/impl/FileManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/include/impl

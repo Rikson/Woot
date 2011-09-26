@@ -80,33 +80,6 @@ string DistributedFileSystem::createBarrel(const string contents) {
 }
 
 void DistributedFileSystem::updateMetadata(vector<map<string,string> >) {
-    
+    FileManager fileManager;
+    fileManager.writeFile(this->base_path + "/" + this->name + ".info", "test");
 }
-
-//bool DistributedFileSystem::updateMetadata() {
-//    ofstream mymetadata;
-//    string path = PATH + "metadata.txt";
-//    mymetadata.open(path.c_str(), ios::app);
-//    mymetadata << path_of_DFSMetadata << "\t";
-//    mymetadata << file_system_name << endl;
-//    return 0;
-//}
-//
-//string DistributedFileSystem::createBarrel(const string contents) {
-//    ofstream mybarrel;
-//    string barrel_path;
-//    string barrel_name = file_system_name + "-mybarrel1.txt";
-//    barrel_path = PATH + barrel_name;
-//    mybarrel.open(path.c_str());
-//    mybarrel << barrel_path << "\t"; /*This is actually creating the DFS Metadata file like term_dictionary.info*/
-//    mybarrel << barrel_name << "\t";
-//    mybarrel << barrel_size;
-//    mybarrel.close();
-//    mybarrel.open(barrel_path.c_str()); /*This is the creating of the barrels specific to the DFS Metadata.*/
-//    mybarrel << "this is my 1st barrel";
-//    mybarrel.close();
-//    return 0;
-//}
-
-
-

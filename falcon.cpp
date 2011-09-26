@@ -17,6 +17,7 @@
 #include "parser/iParser.h"
 #include "parser/iTransformer.h"
 #include "parser/iFilter.h"
+#include "parser/tokenizer/iTokenizer.h"
 
 using namespace std;
 
@@ -29,16 +30,16 @@ int main(int argc, char** argv) {
     string code;
 
     cout << "Welcome to Falcon 1.0!" << endl;
-    cout << endl << "Please enter the CODE: ";
-
-    cin >> code;
-
-    if (code == Constant::CODE) {
-        cout << endl << "CODE match.";
-        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
-    } else {
-        cout << "CODE mismatch!" << endl;
-    }
+//    cout << endl << "Please enter the CODE: ";
+//
+//    cin >> code;
+//
+//    if (code == Constant::CODE) {
+//        cout << endl << "CODE match.";
+//        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
+//    } else {
+//        cout << "CODE mismatch!" << endl;
+//    }
 
     //iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
     iDocumentBuilder::iDocBlr wikiDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
@@ -50,9 +51,11 @@ int main(int argc, char** argv) {
     iFilter::iFlr filter = iFilter::iFlr(new StopWordFilter());
     vector<iFilter::iFlr> filters;
     filters.push_back(filter);
+    
+    iTokenizer::iTkz tokenizer = iTokenizer::iTkz(new Tokenizer());
 
-    //PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters);
-    WikiParser* wikiParser = new WikiParser(transformers, filters);
+    //PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer);
+    WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer);
 
     for (int i = 0; i < 1; i++) {
         //iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build("/home/rikson/data/news/FT911-1");
@@ -61,14 +64,14 @@ int main(int argc, char** argv) {
         vector<string> result = wikiParser->parse(wikiDocument);
         vector<string>::const_iterator itr = result.begin();
         while (itr != result.end()) {
-            //cout << *itr << endl;
+            cout << *itr << endl;
             itr++;
         }
 
     }
 
-    iDistributedFileSystemManager::iDFSM DFM = iDistributedFileSystemManager::iDFSM(new DistributedFileSystemManager(DISTRIBUTED_FILESYSTEM_BASE_PATH));
-    iDistributedFileSystem::iDFS termCountDictionary = DFM->createDistributedFileSystem("Term_Count_dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH, 10000, "forward");
+    //iDistributedFileSystemManager::iDFSM DFM = iDistributedFileSystemManager::iDFSM(new DistributedFileSystemManager(DISTRIBUTED_FILESYSTEM_BASE_PATH));
+    //iDistributedFileSystem::iDFS termCountDictionary = DFM->createDistributedFileSystem("Term_Count_dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH, 10000, "forward");
 
     return 0;
 }
