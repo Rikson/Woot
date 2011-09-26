@@ -10,7 +10,7 @@ using namespace std;
 
 string Tokenizer::tokenize(string word) {
 	char *inputStringChar = (char*)word.c_str();
-	int stemmedIndex = stem(inputStringChar,0,getLastCharacterOffsetForStemming(word));
+	int stemmedIndex = stem(inputStringChar,0,this->getLastCharacterOffsetForStemming(word));
 	return word.substr(0,stemmedIndex+1);
 }
 

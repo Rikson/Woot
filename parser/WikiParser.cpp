@@ -258,21 +258,21 @@ vector<string> WikiParser::parse(const string text) {
             case tokenize:
                 token = this->tokenizeWord(word);
             case end:
-                result.push_back(word);
+                result.push_back(token);
             default:
                 break;
         }
     }
-    trim(highlevelSection);
-    highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
-    //cout << highlevelSectionStack.top() << " : " << highlevelSection << endl;
-    highlevelSectionStack.pop();
-
-    //cout << metaBoxType << ": " << metaboxinfo;
-map<string,string>::iterator it;
-    for ( it=sections.begin() ; it != sections.end(); it++ ) {
-    //cout << (*it).first << " => " << (*it).second << endl;
-    }
+//    trim(highlevelSection);
+//    highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
+//    //cout << highlevelSectionStack.top() << " : " << highlevelSection << endl;
+//    highlevelSectionStack.pop();
+//
+//    //cout << metaBoxType << ": " << metaboxinfo;
+//map<string,string>::iterator it;
+//    for ( it=sections.begin() ; it != sections.end(); it++ ) {
+//    //cout << (*it).first << " => " << (*it).second << endl;
+//    }
 
 
 
