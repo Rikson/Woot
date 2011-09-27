@@ -22,6 +22,8 @@
 using namespace std;
 
 const string DISTRIBUTED_FILESYSTEM_BASE_PATH = "/home/rikson/sandbox/Woot/distributedFileSystem";
+const string NEWS_DATA_BASE_PATH = "/home/rikson/Desktop/data";
+const string WIKI_DATA_BASE_PATH = "/home/rikson/data/wiki";
 
 /*
  * 
@@ -30,18 +32,18 @@ int main(int argc, char** argv) {
     string code;
 
     cout << "Welcome to Falcon 1.0!" << endl;
-//    cout << endl << "Please enter the CODE: ";
-//
-//    cin >> code;
-//
-//    if (code == Constant::CODE) {
-//        cout << endl << "CODE match.";
-//        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
-//    } else {
-//        cout << "CODE mismatch!" << endl;
-//    }
+    //    cout << endl << "Please enter the CODE: ";
+    //
+    //    cin >> code;
+    //
+    //    if (code == Constant::CODE) {
+    //        cout << endl << "CODE match.";
+    //        cout << endl << "Please be patient with us while we are still Wooting!" << endl;
+    //    } else {
+    //        cout << "CODE mismatch!" << endl;
+    //    }
 
-    //iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
+    iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
     iDocumentBuilder::iDocBlr wikiDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
 
     iTransformer::iTfr transformer = iTransformer::iTfr(new LowerCaseTransformer());
@@ -51,24 +53,41 @@ int main(int argc, char** argv) {
     iFilter::iFlr filter = iFilter::iFlr(new StopWordFilter());
     vector<iFilter::iFlr> filters;
     filters.push_back(filter);
-    
+
     iTokenizer::iTkz tokenizer = iTokenizer::iTkz(new Tokenizer());
 
-    //PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer);
+    PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer);
     WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer);
 
-    for (int i = 0; i < 1; i++) {
-        //iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build("/home/rikson/data/news/FT911-1");
-        //vector<string> result = plainTextParser->parse(plainTextDocument);
+    FileManager fileManager;
+
+    // News data
+    vector<string> newsFiles = fileManager.listFilesInDirectory(NEWS_DATA_BASE_PATH);
+    vector<string>::iterator nIt;
+//    for (nIt = newsFiles.begin(); nIt < newsFiles.end(); nIt++) {
+//        iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build(*nIt);
+//        vector<string> result = plainTextParser->parse(plainTextDocument);
+//        vector<string>::const_iterator itr = result.begin();
+//        while (itr != result.end()) {
+//            cout << *itr << endl;
+//            itr++;
+//        }
+//
+//    }
+
+    // Wiki data
+    vector<string> wikiFiles = fileManager.listFilesInDirectory(WIKI_DATA_BASE_PATH);
+    vector<string>::iterator wIt;
+    //for (wIt = wikiFiles.begin(); wIt < wikiFiles.end(); wIt++) {
         iDocument::iDoc wikiDocument = wikiDocumentBuilder->build("/home/rikson/data/wiki/Buffalo,_New_York.txt");
         vector<string> result = wikiParser->parse(wikiDocument);
         vector<string>::const_iterator itr = result.begin();
         while (itr != result.end()) {
-            cout << *itr << endl;
+            //cout << *itr << endl;
             itr++;
         }
 
-    }
+    //}
 
     //iDistributedFileSystemManager::iDFSM DFM = iDistributedFileSystemManager::iDFSM(new DistributedFileSystemManager(DISTRIBUTED_FILESYSTEM_BASE_PATH));
     //iDistributedFileSystem::iDFS termCountDictionary = DFM->createDistributedFileSystem("Term_Count_dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH, 10000, "forward");

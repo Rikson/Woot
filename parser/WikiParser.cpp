@@ -5,6 +5,7 @@
  */
 
 #include <sstream>
+#include <cmath>
 #include <stack>
 #include <map>
 #include <boost/algorithm/string.hpp>
@@ -16,6 +17,15 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
     return PlainTextParser::parse(document);
 }
 
+/**
+ * State machine.
+ * 
+ * State-of-the-art : parses the document in a single pass, identifying all required elements like sections, links categories
+ * infobox, tokens etc.
+ * 
+ * @param text
+ * @return 
+ */
 vector<string> WikiParser::parse(const string text) {
     vector<string> result;
 
@@ -33,20 +43,21 @@ vector<string> WikiParser::parse(const string text) {
     vector<string> categories;
     stack<string> metaboxStack;
     int sectionIndex[4];
-    map<string, string> sections;
-    stack<string> sectionStack;
+    map<int, string > sections;
+    map<int, string > sectionIndexMap;
+    stack< int > sectionStack;
     int index;
     int state = start;
 
+    sectionIndex[0] = 0;
+    sectionIndex[1] = 0;
+    sectionIndex[2] = 0;
+    sectionIndex[3] = 0;
     for (index = 0; index < text.length();) {
         switch (state) {
             case start:
                 word = "";
                 token = "";
-                sectionIndex[0] = 0;
-                sectionIndex[1] = 0;
-                sectionIndex[2] = 0;
-                sectionIndex[3] = 0;
             case interpret:
 
                 control = true;
@@ -138,24 +149,28 @@ vector<string> WikiParser::parse(const string text) {
                                     index++;
                                     depth++;
                                 }
+                                string sectionName;
+                                while (this->wordDelimiter(text[index]) != equals) {
+                                    sectionName.append(1, text[index]);
+                                    index++;
+                                }
+                                while (this->wordDelimiter(text[index]) == equals) {
+                                    index++;
+                                }
                                 sectionIndex[depth]++;
                                 if (depth < 3) {
                                     sectionIndex[depth + 1] = 0; // reset sub index to 0
                                 }
-                                stringstream s_index;
-                                string s_sectionIndex;
-
-                                s_index << sectionIndex[0];
-                                s_sectionIndex += s_index.str();
+                                
+                                int s_index = 0;
+                                s_index += 10000*sectionIndex[0];
 
                                 for (int i = 1; i <= depth; i++) {
-                                    s_sectionIndex += ".";
-                                    stringstream s_index;
-                                    s_index << sectionIndex[i];
-                                    s_sectionIndex += s_index.str();
+                                    s_index += (10000*sectionIndex[i]/(pow(10,i)));
                                 }
 
-                                sectionStack.push(s_sectionIndex);
+                                sectionStack.push(s_index);
+                                sectionIndexMap.insert(pair<int, string> (s_index, sectionName));
                             } else {
                                 word.append(text.substr(index, 1));
                                 index++;
@@ -177,9 +192,9 @@ vector<string> WikiParser::parse(const string text) {
                             index++;
                             control = false;
                             break;
-                            
+
                         case left_parenthesis:
-                            
+
                         case right_parenthesis:
                             index++;
                             break;
@@ -263,18 +278,17 @@ vector<string> WikiParser::parse(const string text) {
                 break;
         }
     }
-//    trim(highlevelSection);
-//    highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
-//    //cout << highlevelSectionStack.top() << " : " << highlevelSection << endl;
-//    highlevelSectionStack.pop();
-//
-//    //cout << metaBoxType << ": " << metaboxinfo;
-//map<string,string>::iterator it;
-//    for ( it=sections.begin() ; it != sections.end(); it++ ) {
-//    //cout << (*it).first << " => " << (*it).second << endl;
-//    }
 
+    if (!highlevelSection.empty() && !highlevelSectionStack.empty()) {
+        trim(highlevelSection);
+        highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
+        highlevelSectionStack.pop();
+    }
 
+    map<int, string>::iterator itr;
+    for (itr = sections.begin(); itr != sections.end(); itr++) {
+        cout << (*itr).first << " : " << sectionIndexMap[(*itr).first] << " : " << (*itr).second.substr(0, 200) << endl;
+    }
 
     return result;
 }

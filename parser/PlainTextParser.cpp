@@ -88,8 +88,19 @@ string PlainTextParser::getNextWord(const string &text, int index) {
 
             case period:
 
+            case colon:
+
             case newline:
                 return w;
+
+            case hyphen:
+
+            case left_parenthesis:
+
+            case right_parenthesis:
+                index++;
+                break;
+
             default:
                 w.append(text.substr(index, 1));
                 index++;
@@ -107,7 +118,7 @@ string PlainTextParser::transformWord(string word) {
     for (int i = 0; i < this->transformers.size(); i++) {
         transformedWord = this->transformers[i]->transform(transformedWord);
     }
-    
+
     return transformedWord;
 }
 
@@ -122,7 +133,7 @@ bool PlainTextParser::filterWord(const string word) {
     for (int i = 0; i < this->filters.size(); i++) {
         if (this->filters[i]->filter(word)) return true;
     }
-    
+
     return false;
 }
 
@@ -156,7 +167,7 @@ int PlainTextParser::wordDelimiter(const char c) {
     delimiters['\t'] = tab;
     delimiters['\n'] = newline;
     delimiters['\r'] = carriage_return;
-    
+
 
     if (delimiters.find(c) != delimiters.end()) {
         return delimiters[c];

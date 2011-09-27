@@ -5,6 +5,7 @@
  *      Author: vivek
  */
 
+#include <dirent.h>
 #include "../FileManager.h"
 
 FileManager::FileManager() {
@@ -62,4 +63,20 @@ void FileManager::deleteFile(const string path){
 	    perror("Error deleting file");
 	  else
 	    puts("File successfully deleted");
+}
+
+vector<string> FileManager::listFilesInDirectory(string path) {
+    vector<string> directoryEntries;
+    DIR* dir = ::opendir(path.c_str());
+    if(dir == NULL)
+        return directoryEntries;
+    struct dirent* entity;
+    while((entity=readdir(dir))) {
+        string directoryItem(entity->d_name);
+        if(directoryItem != "." && directoryItem != "..") {
+            directoryEntries.push_back(path + "/" + directoryItem);
+        }
+    }
+    closedir(dir);
+    return directoryEntries;
 }

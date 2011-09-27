@@ -12,6 +12,7 @@
 #include <sstream>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -33,6 +34,7 @@ public:
 	string readFile(const string path);
 	bool writeFile(const string path,const string content);
 	void deleteFile(const string path);
+        vector<string> listFilesInDirectory(string path);
 
 };
 
