@@ -17,6 +17,7 @@
 #include "iTransformer.h"
 #include "iFilter.h"
 #include "tokenizer/iTokenizer.h"
+#include "../dictionary/iDictionary.h"
 
 #ifndef IPARSER_H
 #define	IPARSER_H
@@ -35,17 +36,25 @@ public:
 
 class PlainTextParser : public iParser {
 private:
+    unsigned int termIDIndex;
+    
     vector<iTransformer::iTfr> transformers;
 
     vector<iFilter::iFlr> filters;
 
     iTokenizer::iTkz tokenizer;
+    
+    iDictionary::iDtr dictionary;
 public:
 
-    PlainTextParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer) {
+    PlainTextParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr dictionary) {
+        termIDIndex = 0;
+        
         this->transformers = transformers;
         this->filters = filters;
         this->tokenizer = tokenizer;
+        
+        this->dictionary = dictionary;
     }
 
     vector<string> parse(iDocument::iDoc document);
@@ -82,10 +91,6 @@ protected:
         carriage_return
     } delimitters;
 
-    virtual vector<string> parse(const string text);
-
-    virtual string getNextWord(const string &text, int index);
-
     virtual string transformWord(string word);
 
     virtual bool filterWord(const string word);
@@ -100,14 +105,16 @@ protected:
 class WikiParser : public PlainTextParser {
 public:
 
-    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer) : PlainTextParser(transformers, filters, tokenizer) {
+    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr dictionary) : PlainTextParser(transformers, filters, tokenizer, dictionary) {
 
     }
 
     vector<string> parse(iDocument::iDoc document);
 
 protected:
-    vector<string> parse(const string text);
+    
+    void createSemWikiFile (string basePath, string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo, 
+            vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap);
 };
 
 #endif	/* IPARSER_H */

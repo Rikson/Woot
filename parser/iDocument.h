@@ -25,6 +25,8 @@ public:
     
     virtual ~iDocument () {}
     
+    virtual string getDocumentName () = 0;
+    
     virtual string getFilepath () = 0;
     
     virtual string getContents () = 0;

@@ -3,3 +3,5 @@
 /nbproject/private/
 /dist/
 /build/
+/lib/sparsehash-1.11/.deps/
+/sink/

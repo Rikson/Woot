@@ -17,52 +17,125 @@ FileManager::~FileManager() {
 	// TODO Auto-generated destructor stub
 }
 
-bool FileManager::createFile(const string path, const string contents){
-	if(contents.size() > 0){
-		writeFile(path,contents);
-		return true;
+
+string FileManager::getFileName (string filepath) {
+    int index = filepath.find_last_of("/") + 1;
+    return filepath.substr(index, filepath.size() - index);
+}
+
+bool FileManager::createFile(string path, string contents){
+	if(!findIfExists(path)){
+		if(contents.size() > 0){
+			writeFile(path,contents);
+			return true;
+		}
+		else{
+			ofstream write;
+			write.open(path.c_str(),ios::app);
+			write << "";
+			write.close();
+			return true;
+		}
 	}
 	else{
-		ofstream write;
-		write.open(path.c_str(),ios::app);
-		write << "";
-		write.close();
-		return true;
+		cout << "The file: " + path + " already exists";
 	}
 	return false;
 }
 
-bool FileManager::createDirectory(const string path){
-    if(mkdir(path.c_str(), 0777) == -1) {
-        cerr << "Error while creating the Directory: " + path << endl;
-        return true;
-    }
-    else{
-    	return false;
-    }
+bool FileManager::createDirectory(string path){
+	if(!findIfExists(path)){
+		if(mkdir(path.c_str(), 0755) == 0) {
+			return true;
+		}
+		else{
+			cerr << "Error while creating the Directory: " + path << endl;
+			return false;
+		}
+	}
+	else{
+		cout << "The directory: " + path + " already exists";
+	}
     return false;
 }
 
-string FileManager::readFile(const string path){
-	std::ifstream t(path.c_str());
-	std::string str((std::istreambuf_iterator<char>(t)),
-			std::istreambuf_iterator<char>());
-	return str;
+bool FileManager::findIfExists(string filename) {
+  ifstream ifile(filename.c_str());
+  return ifile;
 }
 
-bool FileManager::writeFile(const string path, const string content){
-	fstream myfile;
-	myfile.open (path.c_str(), ios::out);
-	myfile << content;
-	myfile.close();
-	return true;
+string FileManager::readFile(string path){
+	string readString;
+	if(findIfExists(path)){
+                std::ifstream if_stream(path.c_str());
+		std::string localCopyOfString((std::istreambuf_iterator<char>(if_stream)),
+				std::istreambuf_iterator<char>());
+                readString = localCopyOfString;
+	}
+	else{
+		cout << "The file to read: " + path + " does not exist";
+	}
+        	return readString;
 }
 
-void FileManager::deleteFile(const string path){
+bool FileManager::writeFile(string path,string content){
+	if(findIfExists(path)){
+		fstream myfile;
+		myfile.open (path.c_str(), ios::out);
+		myfile << content;
+		myfile.close();
+		return true;
+	}
+	else{
+		cout << "The file to write: " + path + " does not exist";
+	}
+	return false;
+}
+
+void FileManager::deleteFile(string path){
+	if(findIfExists(path)){
 	  if(remove(path.c_str()) != 0)
 	    perror("Error deleting file");
 	  else
 	    puts("File successfully deleted");
+	}
+	else{
+		cout << "The file to delete: " + path + " does not exist";
+	}
+}
+
+//int findCharacterLength(string inputString){
+//	cout << inputString.size();
+//	return 0;
+//}DeTemplatizer
+
+bool FileManager::createDirectoriesRecursively(string path){
+	DeTemplatizer deTemplatize;
+	vector<string> tokenVector;
+	deTemplatize.tokenize(path,tokenVector,"/");
+	string pathToCheck = "";
+	for(int i=0; i < (int)tokenVector.size(); i++){
+		pathToCheck += "/"+tokenVector[i];
+		if(!findIfExists(pathToCheck)){
+			bool created = createDirectory(pathToCheck);
+			cout << "Created Directory: " + pathToCheck + " successfully? ";
+			cout << created;
+			cout << "\n";
+		}
+		else{
+			cout << "The directory: " + pathToCheck + " already exists\n";
+		}
+		if(i == (int)tokenVector.size()-1){
+			return true;
+		}
+	}
+	return false;
+}
+
+string FileManager::convertIntToString(int number){
+    stringstream stream;
+    stream << number;
+    return stream.str();
 }
 
 vector<string> FileManager::listFilesInDirectory(string path) {

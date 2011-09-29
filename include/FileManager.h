@@ -8,11 +8,12 @@
 #ifndef FILEMANAGER_H_
 #define FILEMANAGER_H_
 
+#include "DeTemplatizer.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <cstdlib>
 #include <vector>
+#include <cstdlib>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -25,17 +26,30 @@ using std::string;
 using namespace std;
 
 class FileManager {
-
 public:
-	FileManager();
-	virtual ~FileManager();
-	bool createFile(const string path, const string contents);
-	bool createDirectory(const string path);
-	string readFile(const string path);
-	bool writeFile(const string path,const string content);
-	void deleteFile(const string path);
-        vector<string> listFilesInDirectory(string path);
-
+    FileManager();
+    
+    virtual ~FileManager();
+    
+    string getFileName(string filepath);
+    
+    bool createFile(string path, string contents);
+    
+    bool createDirectory(string path);
+    
+    string readFile(string path);
+    
+    bool writeFile(string path, string content);
+    
+    void deleteFile(string path);
+    
+    bool createDirectoriesRecursively(string path);
+    
+    string convertIntToString(int number);
+    
+    vector<string> listFilesInDirectory(string path);
+  
+    bool findIfExists(string filename);
 };
 
 #endif /* FILEMANAGER_H_ */

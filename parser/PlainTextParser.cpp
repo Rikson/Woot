@@ -15,10 +15,6 @@
 #include "PlainTextDocument.h"
 #include "tokenizer/iTokenizer.h"
 
-vector<string> PlainTextParser::parse(iDocument::iDoc document) {
-    return this->parse(document->getContents());
-}
-
 /**
  * State machine.
  * 
@@ -26,13 +22,16 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
  * @param text
  * @return 
  */
-vector<string> PlainTextParser::parse(const string text) {
+vector<string> PlainTextParser::parse(iDocument::iDoc document) {
+    string text = document->getContents();
+    string documentName = document->getDocumentName();
     vector<string> result;
 
     string word;
     string token;
     int index;
     int state = start;
+    bool control;
 
     for (index = 0; index < text.length();) {
         switch (state) {
@@ -40,8 +39,42 @@ vector<string> PlainTextParser::parse(const string text) {
                 word = "";
                 token = "";
             case interpret:
-                word = this->getNextWord(text, index);
-                index += word.length() + 1;
+                control = true;
+                while (control) {
+                    if (index >= text.length()) {
+                        control = false;
+                    }
+
+                    const char c = text[index];
+
+                    switch (c) {
+                        case ' ':
+
+                        case ',':
+
+                        case '.':
+
+                        case ':':
+
+                        case '\n':
+                            index++;
+                            control = false;
+                            break;
+
+                        case '-':
+
+                        case '(':
+
+                        case ')':
+                            index++;
+                            break;
+
+                        default:
+                            word.append(text.substr(index, 1));
+                            index++;
+                            break;
+                    }
+                }
 
                 if (word.empty()) continue;
 
@@ -54,58 +87,14 @@ vector<string> PlainTextParser::parse(const string text) {
             case tokenize:
                 token = this->tokenizeWord(word);
             case end:
-                result.push_back(word);
+                result.push_back(token);
+                this->dictionary->add(token);
             default:
                 break;
         }
     }
 
     return result;
-}
-
-/**
- * State Machine to parse and extract the next 'word' from the input stream.
- * 
- * @param text
- * @param index
- * @return 
- */
-string PlainTextParser::getNextWord(const string &text, int index) {
-    string w = "";
-
-    while (true) {
-        if (index >= text.length()) {
-            return w;
-        }
-
-        const char c = text[index];
-        int state = PlainTextParser::wordDelimiter(c);
-
-        switch (state) {
-            case space:
-
-            case comma:
-
-            case period:
-
-            case colon:
-
-            case newline:
-                return w;
-
-            case hyphen:
-
-            case left_parenthesis:
-
-            case right_parenthesis:
-                index++;
-                break;
-
-            default:
-                w.append(text.substr(index, 1));
-                index++;
-        }
-    }
 }
 
 /**

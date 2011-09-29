@@ -12,6 +12,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>include/impl/DeTemplatizer.cpp</itemPath>
+      <itemPath>dictionary/impl/Dictionary.cpp</itemPath>
       <itemPath>distributedFileSystem/impl/DistributedFileSystem.cpp</itemPath>
       <itemPath>distributedFileSystem/impl/DistributedFileSystemManager.cpp</itemPath>
       <itemPath>parser/Document.h</itemPath>
@@ -22,6 +24,7 @@
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
       <itemPath>parser/filter/StopWordFilter.cpp</itemPath>
+      <itemPath>include/impl/Templatizer.cpp</itemPath>
       <itemPath>parser/tokenizer/impl/Tokenizer.cpp</itemPath>
       <itemPath>parser/WikiDocument.h</itemPath>
       <itemPath>parser/WikiParser.cpp</itemPath>
@@ -52,6 +55,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>include/DeTemplatizer.h</itemPath>
+    <itemPath>include/Templatizer.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

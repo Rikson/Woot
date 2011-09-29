@@ -10,12 +10,9 @@
 #include <map>
 #include <boost/algorithm/string.hpp>
 #include "iParser.h"
+#include "../include/FileManager.h"
 
 using namespace boost;
-
-vector<string> WikiParser::parse(iDocument::iDoc document) {
-    return PlainTextParser::parse(document);
-}
 
 /**
  * State machine.
@@ -26,7 +23,9 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
  * @param text
  * @return 
  */
-vector<string> WikiParser::parse(const string text) {
+vector<string> WikiParser::parse(iDocument::iDoc document) {
+    string text = document->getContents();
+    string documentName = document->getDocumentName();
     vector<string> result;
 
     string word;
@@ -68,7 +67,6 @@ vector<string> WikiParser::parse(const string text) {
 
                     string ch;
                     const char c = text[index];
-                    int state = PlainTextParser::wordDelimiter(c);
 
                     if (!metaboxStack.empty()) {
                         metaboxinfo += text.substr(index, 1);
@@ -78,8 +76,8 @@ vector<string> WikiParser::parse(const string text) {
                         sections[sectionStack.top()] += text.substr(index, 1);
                     }
 
-                    switch (state) {
-                        case left_angular_bracket:
+                    switch (c) {
+                        case '<':
                             metainfoStack.push(c);
 
                             // We are only interested in meta information in the format : <<metainfo>> and not <metainfo>
@@ -94,7 +92,7 @@ vector<string> WikiParser::parse(const string text) {
                             index++;
                             break;
 
-                        case right_angular_bracket:
+                        case '>':
                             if (!metainfoStack.empty()) {
                                 ch = metainfoStack.top();
                                 metainfoStack.pop();
@@ -115,7 +113,7 @@ vector<string> WikiParser::parse(const string text) {
                             index++;
                             break;
 
-                        case left_curly_brace:
+                        case '{':
                             if (this->wordDelimiter(text[index + 1]) == left_curly_brace && (iequals("infobox", text.substr(index + 2, 7)) || iequals("taxobox", text.substr(index + 2, 7)))) {
                                 metaBoxType = text.substr(index + 2, 7);
                                 metaboxStack.push("{");
@@ -131,7 +129,7 @@ vector<string> WikiParser::parse(const string text) {
                             }
                             break;
 
-                        case right_curly_brace:
+                        case '}':
                             if (!metaboxStack.empty()) {
                                 metaboxStack.pop();
                                 index++;
@@ -141,7 +139,7 @@ vector<string> WikiParser::parse(const string text) {
                             }
                             break;
 
-                        case equals:
+                        case '=':
                             if (this->wordDelimiter(text[index + 1]) == equals) {
                                 index += 2;
                                 int depth = 0;
@@ -161,45 +159,42 @@ vector<string> WikiParser::parse(const string text) {
                                 if (depth < 3) {
                                     sectionIndex[depth + 1] = 0; // reset sub index to 0
                                 }
-                                
+
                                 int s_index = 0;
-                                s_index += 10000*sectionIndex[0];
+                                s_index += 10000 * sectionIndex[0];
 
                                 for (int i = 1; i <= depth; i++) {
-                                    s_index += (10000*sectionIndex[i]/(pow(10,i)));
+                                    s_index += (10000 * sectionIndex[i] / (int)(pow((double)10, i)));
                                 }
 
                                 sectionStack.push(s_index);
-                                sectionIndexMap.insert(pair<int, string> (s_index, sectionName));
+                                sectionIndexMap.insert(pair<int, string > (s_index, sectionName));
                             } else {
                                 word.append(text.substr(index, 1));
                                 index++;
                             }
                             break;
 
-                        case space:
+                        case ' ':
 
-                        case comma:
+                        case ',':
 
-                        case period:
+                        case '.':
 
-                        case colon:
+                        case ':':
 
-                        case newline:
-                            if (metainfoStack.empty()) {
-                                highlevelSection.append(1, c);
-                            }
+                        case '\n':
                             index++;
                             control = false;
                             break;
 
-                        case left_parenthesis:
+                        case '(':
 
-                        case right_parenthesis:
+                        case ')':
                             index++;
                             break;
 
-                        case left_square_bracket:
+                        case '[':
                             if (this->wordDelimiter(text[index + 1]) == left_square_bracket) {
                                 int j = index + 2;
                                 string link;
@@ -221,15 +216,15 @@ vector<string> WikiParser::parse(const string text) {
                             }
                             break;
 
-                        case right_square_bracket:
+                        case ']':
                             index++;
                             break;
 
-                        case exclamation:
+                        case '!':
                             index++;
                             break;
 
-                        case hyphen:
+                        case '-':
                             // Ignore comments
                             if (this->wordDelimiter(text[index - 1]) == exclamation && this->wordDelimiter(text[index - 2]) == left_angular_bracket) {
                                 // We are only interested in meta information in the format : <<metainfo>> and not <metainfo>
@@ -285,10 +280,57 @@ vector<string> WikiParser::parse(const string text) {
         highlevelSectionStack.pop();
     }
 
-    map<int, string>::iterator itr;
-    for (itr = sections.begin(); itr != sections.end(); itr++) {
-        cout << (*itr).first << " : " << sectionIndexMap[(*itr).first] << " : " << (*itr).second.substr(0, 200) << endl;
-    }
+    const string base_path = "/home/rikson/sandbox/Woot/sink/semwiki";
+    this->createSemWikiFile(base_path, documentName, highlevelSections, metaBoxType, metaboxinfo, links, categories, sections, sectionIndexMap);
 
     return result;
+}
+
+void WikiParser::createSemWikiFile(string base_path, string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo,
+        vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap) {
+    FileManager fileManager;
+    const string path = base_path + "/" + name;
+    fileManager.createFile(path, "");
+
+    string buffer;
+    buffer += "<#ARTICAL NAME>\n";
+    buffer += name + "\n\n";
+
+    buffer += "<#AUTHOR>\n";
+    buffer += metaData["Author"] + "\n\n";
+
+    buffer += "<#TIMESTAMP\n";
+    buffer += metaData["Timestamp"] + "\n\n";
+
+    buffer += "<#" + metaBoxType + ">\n";
+    buffer += metaBoxInfo + "\n\n";
+
+    buffer += "<#SECTIONS>\n";
+    map<int, string>::iterator itr;
+    for (itr = sectionMap.begin(); itr != sectionMap.end(); itr++) {
+        buffer += "<#" + sectionIndexMap[(*itr).first] + ">\n";
+        buffer += (*itr).second.substr(0, 200) + "\n\n";
+    }
+
+    buffer += "<#LINKS>\n";
+    for (int i = 0; i < links.size(); i++) {
+        buffer += links[i];
+
+        if (i != links.size()) {
+            buffer += " $ ";
+        }
+    }
+    buffer += "\n\n";
+
+    buffer += "<#CATEGORY>\n";
+    for (int i = 0; i < categories.size(); i++) {
+        buffer += categories[i];
+
+        if (i != categories.size()) {
+            buffer += " $ ";
+        }
+    }
+    buffer += "\n\n";
+
+    fileManager.writeFile(path, buffer);
 }

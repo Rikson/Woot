@@ -23,11 +23,14 @@ DistributedFileSystemManager :: DistributedFileSystemManager(const string root_p
     const string path = root_path + "/" +  METADATA_FILE;
     
     FileManager fileManager;
-    bool result = fileManager.createFile (path, "");
+    if (!fileManager.findIfExists(path) && !fileManager.createFile (path, "")) {
+        cout << "Failed to create DFS manager metadata file." << endl;
+        exit(1);
+    }
 }
 
-iDistributedFileSystem::iDFS DistributedFileSystemManager::createDistributedFileSystem(const string file_system_name, const string dfs_base_path, const size_t barrel_size, const string keyType) {
-    return iDistributedFileSystem::iDFS(new DistributedFileSystem(file_system_name, this->root_path, barrel_size, keyType));
+iDistributedFileSystem::iDFS DistributedFileSystemManager::createDistributedFileSystem(const string file_system_name, const string dfs_base_path, const size_t barrel_size) {
+    return iDistributedFileSystem::iDFS(new DistributedFileSystem(file_system_name, this->root_path, barrel_size));
 }
 
 iDistributedFileSystem::iDFS DistributedFileSystemManager::getFileSystem(const string file_system_name) {

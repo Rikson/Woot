@@ -36,9 +36,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o \
 	${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o \
+	${OBJECTDIR}/include/impl/Templatizer.o \
 	${OBJECTDIR}/parser/PlainTextParser.o \
 	${OBJECTDIR}/falcon.o \
 	${OBJECTDIR}/parser/WikiParser.o \
+	${OBJECTDIR}/include/impl/DeTemplatizer.o \
+	${OBJECTDIR}/dictionary/impl/Dictionary.o \
 	${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o \
 	${OBJECTDIR}/include/impl/FileManager.o \
 	${OBJECTDIR}/parser/filter/StopWordFilter.o \
@@ -79,6 +82,11 @@ ${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o: parser/transformer/Lower
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o parser/transformer/LowerCaseTransformer.cpp
 
+${OBJECTDIR}/include/impl/Templatizer.o: include/impl/Templatizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/impl/Templatizer.o include/impl/Templatizer.cpp
+
 ${OBJECTDIR}/parser/PlainTextParser.o: parser/PlainTextParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
@@ -93,6 +101,16 @@ ${OBJECTDIR}/parser/WikiParser.o: parser/WikiParser.cpp
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/WikiParser.o parser/WikiParser.cpp
+
+${OBJECTDIR}/include/impl/DeTemplatizer.o: include/impl/DeTemplatizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/include/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/impl/DeTemplatizer.o include/impl/DeTemplatizer.cpp
+
+${OBJECTDIR}/dictionary/impl/Dictionary.o: dictionary/impl/Dictionary.cpp 
+	${MKDIR} -p ${OBJECTDIR}/dictionary/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dictionary/impl/Dictionary.o dictionary/impl/Dictionary.cpp
 
 ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o: parser/tokenizer/impl/Tokenizer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser/tokenizer/impl
