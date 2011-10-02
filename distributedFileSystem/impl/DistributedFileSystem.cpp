@@ -32,14 +32,14 @@ DistributedFileSystem::DistributedFileSystem(const string name, const string bas
     this->no_of_barrels = 0;
 
     this->record_count = 0;
-    
+
     this->sink_path = base_path + "/" + SINK;
     if (!fileManager.findIfExists(this->sink_path) && !fileManager.createDirectory(this->sink_path)) {
         cout << "Failed to create DFS sink." << endl;
         exit(1);
     }
-    
-    
+
+
 
     // Create file system directory
     this->base_path = this->sink_path + "/" + name;
@@ -82,12 +82,12 @@ string DistributedFileSystem::get(unsigned int key) {
         if (this->insertionSink.find(key) == this->insertionSink.end()) {
             const string barrel_path = this->getBarrelPath(key);
             if (!fileManager.findIfExists(barrel_path)) {
-                return 0;
+                return "";
             }
 
             dense_hash_map<unsigned int, string, hash<int>, eq> barrel = this->loadBarrel(barrel_path);
             if (barrel.find(key) == barrel.end()) {
-                return 0;
+                return "";
             }
 
             // Swap out a barrel to make room for the new one.
@@ -135,7 +135,7 @@ void DistributedFileSystem::put(const unsigned int key, string value) {
 void DistributedFileSystem::flush() {
     map<int, map<string, string> > metadata;
     map<int, map<string, string> > barrels;
-    cout << "flush..";
+
     dense_hash_map<unsigned int, string, hash<int>, eq>::iterator itr;
     for (itr = this->insertionSink.begin(); itr != this->insertionSink.end(); itr++) {
         int barrel_no = this->getBarrelNo((*itr).first);
@@ -162,6 +162,14 @@ void DistributedFileSystem::flush() {
 
     this->updateMetadata(metadata);
     this->insertionSink.clear();
+}
+
+/**
+ * Get the size i.e number of records in the file system.
+ * @return 
+ */
+int DistributedFileSystem::size() {
+    return this->record_count;
 }
 
 /**

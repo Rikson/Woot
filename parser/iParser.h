@@ -18,6 +18,8 @@
 #include "iFilter.h"
 #include "tokenizer/iTokenizer.h"
 #include "../dictionary/iDictionary.h"
+#include "../dictionary/iCountDictionary.h"
+#include "SemWikiGenerator.h"
 
 #ifndef IPARSER_H
 #define	IPARSER_H
@@ -37,24 +39,30 @@ public:
 class PlainTextParser : public iParser {
 private:
     unsigned int termIDIndex;
-    
+
     vector<iTransformer::iTfr> transformers;
 
     vector<iFilter::iFlr> filters;
 
     iTokenizer::iTkz tokenizer;
-    
-    iDictionary::iDtr dictionary;
+
+    iDictionary::iDtr termDictionary;
+
+    iCountDictionary::iCDtr termCountDictionary;
+
+    iCountDictionary::iCDtr rawTokenCountdictionary;
 public:
 
-    PlainTextParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr dictionary) {
+    PlainTextParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr termDictionary, iCountDictionary::iCDtr termCountDictionary, iCountDictionary::iCDtr rawTokenCountdictionary) {
         termIDIndex = 0;
-        
+
         this->transformers = transformers;
         this->filters = filters;
         this->tokenizer = tokenizer;
-        
-        this->dictionary = dictionary;
+
+        this->termDictionary = termDictionary;
+        this->termCountDictionary = termCountDictionary;
+        this->rawTokenCountdictionary = rawTokenCountdictionary;
     }
 
     vector<string> parse(iDocument::iDoc document);
@@ -100,20 +108,29 @@ protected:
     int wordDelimiter(const char c);
 
     vector<string> wordifyText(string text);
+
+    void addToTermDictionary(const string token);
+
+    void addToTermCountDictionary(const string token);
+
+    void addToRawCountDictionary(const string rawToken);
 };
 
 class WikiParser : public PlainTextParser {
+private:
+
+    SemWikiGenerator::iSWG semWikiGenerator;
 public:
 
-    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr dictionary) : PlainTextParser(transformers, filters, tokenizer, dictionary) {
-
+    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr termDictionary, iCountDictionary::iCDtr termCountDictionary, iCountDictionary::iCDtr rawTokenCountdictionary, SemWikiGenerator::iSWG semWikiGenerator) : PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountdictionary) {
+        this->semWikiGenerator = semWikiGenerator;
     }
 
     vector<string> parse(iDocument::iDoc document);
 
 protected:
-    
-    void createSemWikiFile (string basePath, string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo, 
+
+    void createSemWikiFile(string basePath, string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo,
             vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap);
 };
 

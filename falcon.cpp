@@ -8,6 +8,8 @@
 #include "parser/iTransformer.h"
 #include "parser/iFilter.h"
 #include "dictionary/iDictionary.h"
+#include "dictionary/iCountDictionary.h"
+#include "parser/SemWikiGenerator.h"
 
 #include <iostream>
 #include <string>
@@ -29,7 +31,7 @@ static int BARREL_SIZE;
  */
 int main(int argc, char** argv) {
 
-    cout << "Reading Configuration File";
+    cout << "Reading Configuration File" << endl;
 
     FileManager manager;
     string cfg_filename = argv[2];
@@ -63,10 +65,14 @@ int main(int argc, char** argv) {
 
     iDictionary::iDtr fileDictionary = iDictionary::iDtr(new Dictionary("File Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
     iDictionary::iDtr termDictionary = iDictionary::iDtr(new Dictionary("Term Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    iCountDictionary::iCDtr termCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Term Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    iCountDictionary::iCDtr rawTokenCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Raw Token Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
 
+    SemWikiGenerator::iSWG semWikiGenerator = SemWikiGenerator::iSWG(new SemWikiGenerator (DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    
     // Loading and Initializing the Plain and Wiki Text Parser
-    PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer, termDictionary);
-    WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer, termDictionary);
+    PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary);
+    WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary, semWikiGenerator);
 
     FileManager fileManager;
     unsigned no_of_files = 0;
@@ -93,7 +99,11 @@ int main(int argc, char** argv) {
 
     fileDictionary->flush();
     termDictionary->flush();
+    termCountDictionary->flush();
+    rawTokenCountDictionary->flush();
 
+    cout << endl << termDictionary->size() << " no of tokens added to term dictionary" << endl;
+    cout << endl << fileDictionary->size() << " no of files added to file dictionary" << endl;
     cout << endl << "No of files processed : " << no_of_files << endl;
 
 

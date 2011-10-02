@@ -78,6 +78,7 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
 
                 if (word.empty()) continue;
 
+                this->addToRawCountDictionary(word);
             case transform:
                 word = this->transformWord(word);
 
@@ -88,7 +89,8 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
                 token = this->tokenizeWord(word);
             case end:
                 result.push_back(token);
-                this->dictionary->add(token);
+                this->addToTermDictionary(token);
+                this->addToTermCountDictionary(token);
             default:
                 break;
         }
@@ -163,4 +165,16 @@ int PlainTextParser::wordDelimiter(const char c) {
     }
 
     return -1;
+}
+
+void PlainTextParser::addToTermDictionary(const string token) {
+    this->termDictionary->add(token);
+}
+
+void PlainTextParser::addToTermCountDictionary(const string token) {
+    this->termCountDictionary->add(token);
+}
+
+void PlainTextParser::addToRawCountDictionary(const string rawToken) {
+    this->rawTokenCountdictionary->add(rawToken);
 }

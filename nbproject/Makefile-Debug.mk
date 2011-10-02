@@ -34,6 +34,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/parser/SemWikiGenerator.o \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o \
 	${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o \
 	${OBJECTDIR}/include/impl/Templatizer.o \
@@ -43,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/include/impl/DeTemplatizer.o \
 	${OBJECTDIR}/dictionary/impl/Dictionary.o \
 	${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o \
+	${OBJECTDIR}/dictionary/impl/CountDictionary.o \
 	${OBJECTDIR}/include/impl/FileManager.o \
 	${OBJECTDIR}/parser/filter/StopWordFilter.o \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystem.o
@@ -71,6 +73,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/woot ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/parser/SemWikiGenerator.o: parser/SemWikiGenerator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/SemWikiGenerator.o parser/SemWikiGenerator.cpp
 
 ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o: distributedFileSystem/impl/DistributedFileSystemManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/distributedFileSystem/impl
@@ -116,6 +123,11 @@ ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o: parser/tokenizer/impl/Tokenizer.
 	${MKDIR} -p ${OBJECTDIR}/parser/tokenizer/impl
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o parser/tokenizer/impl/Tokenizer.cpp
+
+${OBJECTDIR}/dictionary/impl/CountDictionary.o: dictionary/impl/CountDictionary.cpp 
+	${MKDIR} -p ${OBJECTDIR}/dictionary/impl
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dictionary/impl/CountDictionary.o dictionary/impl/CountDictionary.cpp
 
 ${OBJECTDIR}/include/impl/FileManager.o: include/impl/FileManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/include/impl

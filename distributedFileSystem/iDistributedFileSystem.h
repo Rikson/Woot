@@ -49,6 +49,12 @@ public:
      * Flush all the in-memory records to the disk.
      */
     virtual void flush() = 0;
+    
+    /**
+     * Get the size i.e number of records in the file system.
+     * @return 
+     */
+    virtual int size() = 0;
 };
 
 struct eq {
@@ -157,6 +163,12 @@ public:
      * Flushes all the records in the file system memory image on to the disk.
      */
     void flush();
+    
+    /**
+     * Get the size i.e number of records in the file system.
+     * @return 
+     */
+    int size();
 
 private:
 

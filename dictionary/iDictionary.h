@@ -26,9 +26,13 @@ public:
     
     virtual string get (const int key) = 0;
     
+    virtual int getKey (const string value) = 0;
+    
     virtual void add (const string value) = 0;
     
     virtual void flush() = 0;
+    
+    virtual int size() = 0;
 };
 
 class Dictionary : public iDictionary {
@@ -40,7 +44,7 @@ public:
     
     Dictionary(string name, string base_path) {
         this->name = name;
-        this->DFS = iDistributedFileSystem::iDFS(new DistributedFileSystem(name, base_path, 100000));
+        this->DFS = iDistributedFileSystem::iDFS(new DistributedFileSystem(name, base_path, 1000000));
     }
     
     ~Dictionary () {
@@ -49,7 +53,11 @@ public:
     
     string get (const int key);
     
+    int getKey (const string value);
+    
     void add (const string value);
+    
+    int size();
     
     void flush();
 };

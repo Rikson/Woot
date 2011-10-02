@@ -12,6 +12,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>dictionary/impl/CountDictionary.cpp</itemPath>
       <itemPath>include/impl/DeTemplatizer.cpp</itemPath>
       <itemPath>dictionary/impl/Dictionary.cpp</itemPath>
       <itemPath>distributedFileSystem/impl/DistributedFileSystem.cpp</itemPath>
@@ -23,6 +24,8 @@
       <itemPath>parser/transformer/LowerCaseTransformer.cpp</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
+      <itemPath>parser/SemWikiGenerator.cpp</itemPath>
+      <itemPath>parser/SemWikiGenerator.h</itemPath>
       <itemPath>parser/filter/StopWordFilter.cpp</itemPath>
       <itemPath>include/impl/Templatizer.cpp</itemPath>
       <itemPath>parser/tokenizer/impl/Tokenizer.cpp</itemPath>
@@ -30,6 +33,7 @@
       <itemPath>parser/WikiParser.cpp</itemPath>
       <itemPath>include/constants.h</itemPath>
       <itemPath>falcon.cpp</itemPath>
+      <itemPath>dictionary/iCountDictionary.h</itemPath>
       <itemPath>dictionary/iDictionary.h</itemPath>
       <itemPath>distributedFileSystem/iDistributedFileSystem.h</itemPath>
       <itemPath>distributedFileSystem/iDistributedFileSystemManager.h</itemPath>
