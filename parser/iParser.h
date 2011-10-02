@@ -119,19 +119,27 @@ protected:
 class WikiParser : public PlainTextParser {
 private:
 
+    iDictionary::iDtr authorDictionary;
+    
+    iDictionary::iDtr categoryDictionary;
+    
+    iDistributedFileSystem::iDFS linkRepository;
+    
     SemWikiGenerator::iSWG semWikiGenerator;
 public:
 
-    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr termDictionary, iCountDictionary::iCDtr termCountDictionary, iCountDictionary::iCDtr rawTokenCountdictionary, SemWikiGenerator::iSWG semWikiGenerator) : PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountdictionary) {
+    WikiParser(vector<iTransformer::iTfr> transformers, vector<iFilter::iFlr> filters, iTokenizer::iTkz tokenizer, iDictionary::iDtr termDictionary, iCountDictionary::iCDtr termCountDictionary, iCountDictionary::iCDtr rawTokenCountdictionary, iDictionary::iDtr authorDictionary, iDictionary::iDtr categoryDictionary, iDistributedFileSystem::iDFS linkRepository, SemWikiGenerator::iSWG semWikiGenerator) : PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountdictionary) {
+        this->authorDictionary = authorDictionary;
+        this->categoryDictionary = categoryDictionary;
+        this->linkRepository = linkRepository;
         this->semWikiGenerator = semWikiGenerator;
     }
 
     vector<string> parse(iDocument::iDoc document);
-
-protected:
-
-    void createSemWikiFile(string basePath, string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo,
-            vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap);
+    
+private:
+    
+    void addToLinkRepository (const string documentName, set<string> links);
 };
 
 #endif	/* IPARSER_H */

@@ -6,7 +6,7 @@
  */
 
 #include <string>
-#include <vector>
+#include <set>
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include "../include/FileManager.h"
@@ -37,7 +37,7 @@ public:
     }
 
     void createSemWikiFile(string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo,
-            vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap);
+            set<string> links, set<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap);
 };
 
 #endif	/* SEMWIKIGENERATOR_H */

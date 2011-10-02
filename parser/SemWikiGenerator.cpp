@@ -5,10 +5,9 @@
 #include "SemWikiGenerator.h"
 
 void SemWikiGenerator::createSemWikiFile(string name, map<string, string> metaData, string metaBoxType, string metaBoxInfo,
-        vector<string> links, vector<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap) {
+        set<string> links, set<string> categories, map<int, string> sectionMap, map<int, string> sectionIndexMap) {
     FileManager fileManager;
     const string path = this->base_path + "/" + name;
-    fileManager.createFile(path, "");
 
     string buffer;
     buffer += "<#ARTICAL NAME>\n";
@@ -31,24 +30,32 @@ void SemWikiGenerator::createSemWikiFile(string name, map<string, string> metaDa
     }
 
     buffer += "<#LINKS>\n";
-    for (int i = 0; i < links.size(); i++) {
-        buffer += links[i];
+    set<string>::iterator it;
+    for (it = links.begin(); it != links.end();) {
+        buffer += (*it);
 
-        if (i != links.size()) {
+        it++;
+        if (it != links.end()) {
             buffer += " $ ";
         }
     }
     buffer += "\n\n";
 
     buffer += "<#CATEGORY>\n";
-    for (int i = 0; i < categories.size(); i++) {
-        buffer += categories[i];
+    for (it = categories.begin(); it != categories.end();) {
+        buffer += (*it);
+        ;
 
-        if (i != categories.size()) {
+        it++;
+        if (it != categories.end()) {
             buffer += " $ ";
         }
     }
     buffer += "\n\n";
 
+    if (!fileManager.findIfExists(path) && !fileManager.createFile(path, "")) {
+        cout << "Failed to create semwiki file - " << path << endl;
+        exit(1);
+    }
     fileManager.writeFile(path, buffer);
 }

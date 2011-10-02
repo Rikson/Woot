@@ -65,14 +65,20 @@ int main(int argc, char** argv) {
 
     iDictionary::iDtr fileDictionary = iDictionary::iDtr(new Dictionary("File Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
     iDictionary::iDtr termDictionary = iDictionary::iDtr(new Dictionary("Term Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    
     iCountDictionary::iCDtr termCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Term Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
     iCountDictionary::iCDtr rawTokenCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Raw Token Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
 
+    iDictionary::iDtr authorDictionary = iDictionary::iDtr(new Dictionary("Author Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    iDictionary::iDtr categoryDictionary = iDictionary::iDtr(new Dictionary("Category Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    
+    iDistributedFileSystem::iDFS linkRepository = iDistributedFileSystem::iDFS(new DistributedFileSystem("Link Repository", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY, 1000000));
+    
     SemWikiGenerator::iSWG semWikiGenerator = SemWikiGenerator::iSWG(new SemWikiGenerator (DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
     
     // Loading and Initializing the Plain and Wiki Text Parser
     PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary);
-    WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary, semWikiGenerator);
+    WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary, authorDictionary, categoryDictionary, linkRepository, semWikiGenerator);
 
     FileManager fileManager;
     unsigned no_of_files = 0;
@@ -101,6 +107,9 @@ int main(int argc, char** argv) {
     termDictionary->flush();
     termCountDictionary->flush();
     rawTokenCountDictionary->flush();
+    authorDictionary->flush();
+    categoryDictionary->flush();
+    linkRepository->flush();
 
     cout << endl << termDictionary->size() << " no of tokens added to term dictionary" << endl;
     cout << endl << fileDictionary->size() << " no of files added to file dictionary" << endl;

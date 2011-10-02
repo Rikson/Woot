@@ -8,6 +8,7 @@
 #include <cmath>
 #include <stack>
 #include <map>
+#include <set>
 #include <boost/algorithm/string.hpp>
 #include "iParser.h"
 #include "../include/FileManager.h"
@@ -38,8 +39,8 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
     stack<char> metainfoStack;
     stack<string> highlevelSectionStack;
     map<string, string> highlevelSections;
-    vector<string> links;
-    vector<string> categories;
+    set<string> links;
+    set<string> categories;
     stack<string> metaboxStack;
     int sectionIndex[4];
     map<int, string > sections;
@@ -84,7 +85,11 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                             if (!highlevelSectionStack.empty() && metainfoStack.size() == 2) {
                                 trim(highlevelSection);
                                 highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
-                                //cout << highlevelSectionStack.top() << " : " << highlevelSection << endl;
+
+                                if (boost::iequals(highlevelSectionStack.top(), "Author")) {
+                                    this->authorDictionary->add(highlevelSection);
+                                }
+
                                 highlevelSectionStack.pop();
                                 highlevelSection = "";
                             }
@@ -104,7 +109,6 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                             }
 
                             reverse(metainfo.begin(), metainfo.end());
-                            //cout << metainfo << endl; 
 
                             if (!metainfo.empty()) {
                                 highlevelSectionStack.push(metainfo);
@@ -164,7 +168,7 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                                 s_index += 10000 * sectionIndex[0];
 
                                 for (int i = 1; i <= depth; i++) {
-                                    s_index += (10000 * sectionIndex[i] / (int)(pow((double)10, i)));
+                                    s_index += (10000 * sectionIndex[i] / (int) (pow((double) 10, i)));
                                 }
 
                                 sectionStack.push(s_index);
@@ -195,19 +199,20 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                             break;
 
                         case '[':
-                            if (this->wordDelimiter(text[index + 1]) == left_square_bracket) {
+                            if (this->wordDelimiter(text[index + 1]) == left_square_bracket && text.substr(index + 2, 5) != "Image") {
                                 int j = index + 2;
                                 string link;
                                 while (this->wordDelimiter(text[j]) != right_square_bracket) {
                                     link.append(text.substr(j, 1));
                                     j++;
                                 }
-                                links.push_back(link);
+                                links.insert(link);
 
                                 int k = index + 2;
                                 if (iequals("category:", text.substr(k, 9))) {
-                                    //cout << text.substr(k + 9, j - (k + 9)) << endl;
-                                    categories.push_back(text.substr(k + 9, j - (k + 9)));
+                                    string category = text.substr(k + 9, j - (k + 9));
+                                    categories.insert(category);
+                                    this->categoryDictionary->add(category);
                                 }
 
                                 index += 2;
@@ -283,8 +288,32 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
         highlevelSectionStack.pop();
     }
 
+    this->addToLinkRepository(documentName.substr(0, documentName.find_last_of(".")), links);
     this->semWikiGenerator->createSemWikiFile(documentName, highlevelSections, metaBoxType, metaboxinfo, links, categories, sections, sectionIndexMap);
 
     return result;
 }
 
+/**
+ * TODO : Clean the links before adding to the repository i.e, strip off all irrelevant components marked by for instance ':'
+ * @param documentName
+ * @param links
+ */
+void WikiParser::addToLinkRepository(const string documentName, set<string> links) {
+    stringstream linkstream;
+    tr1::hash<string> hash;
+    set<string>::iterator it;
+    for (it = links.begin(); it != links.end();) {
+        linkstream << (*it);
+
+        it++;
+        if (it != links.end()) {
+            linkstream << "`";
+        }
+    }
+    
+    // Type case from unsigned long int to unsigned int to reduce the hash range.
+    unsigned int key = hash(documentName);
+    
+    this->linkRepository->put(key, linkstream.str());
+}

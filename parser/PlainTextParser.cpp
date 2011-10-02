@@ -62,6 +62,8 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
                             break;
 
                         case '-':
+                            
+                        case '?':
 
                         case '(':
 
