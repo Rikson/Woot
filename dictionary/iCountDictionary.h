@@ -39,9 +39,9 @@ private:
 
 public:
 
-    CountDictionary(string name, string base_path) {
+    CountDictionary(string name, iDistributedFileSystem::iDFS DFS) {
         this->name = name;
-        this->DFS = iDistributedFileSystem::iDFS(new DistributedFileSystem(name, base_path, 100000));
+        this->DFS = DFS;
     }
 
     ~CountDictionary() {

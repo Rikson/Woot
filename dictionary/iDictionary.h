@@ -42,9 +42,9 @@ private:
     
 public:
     
-    Dictionary(string name, string base_path) {
+    Dictionary(string name, iDistributedFileSystem::iDFS DFS) {
         this->name = name;
-        this->DFS = iDistributedFileSystem::iDFS(new DistributedFileSystem(name, base_path, 1000000));
+        this->DFS = DFS;
     }
     
     ~Dictionary () {

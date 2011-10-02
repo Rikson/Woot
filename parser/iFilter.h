@@ -6,6 +6,7 @@
  */
 
 #include <string>
+#include <map>
 #include <boost/shared_ptr.hpp>
 
 #ifndef IFILTER_H
@@ -26,7 +27,11 @@ public:
 };
 
 class StopWordFilter : public iFilter {
+private:
+    map<string, string> stopWords;
 public:
+    
+    StopWordFilter();
     
     bool filter (string word);
 };

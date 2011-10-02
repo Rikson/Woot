@@ -35,7 +35,10 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/parser/SemWikiGenerator.o \
+	${OBJECTDIR}/indexer/impl/Indexer.o \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o \
+	${OBJECTDIR}/dictionary/impl/DictionaryManager.o \
+	${OBJECTDIR}/dictionary/impl/CountDictionaryManager.o \
 	${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o \
 	${OBJECTDIR}/include/impl/Templatizer.o \
 	${OBJECTDIR}/parser/PlainTextParser.o \
@@ -79,10 +82,25 @@ ${OBJECTDIR}/parser/SemWikiGenerator.o: parser/SemWikiGenerator.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/SemWikiGenerator.o parser/SemWikiGenerator.cpp
 
+${OBJECTDIR}/indexer/impl/Indexer.o: indexer/impl/Indexer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/indexer/impl
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/indexer/impl/Indexer.o indexer/impl/Indexer.cpp
+
 ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o: distributedFileSystem/impl/DistributedFileSystemManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/distributedFileSystem/impl
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o distributedFileSystem/impl/DistributedFileSystemManager.cpp
+
+${OBJECTDIR}/dictionary/impl/DictionaryManager.o: dictionary/impl/DictionaryManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/dictionary/impl
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dictionary/impl/DictionaryManager.o dictionary/impl/DictionaryManager.cpp
+
+${OBJECTDIR}/dictionary/impl/CountDictionaryManager.o: dictionary/impl/CountDictionaryManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/dictionary/impl
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/boost_1_47_0 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dictionary/impl/CountDictionaryManager.o dictionary/impl/CountDictionaryManager.cpp
 
 ${OBJECTDIR}/parser/transformer/LowerCaseTransformer.o: parser/transformer/LowerCaseTransformer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/parser/transformer

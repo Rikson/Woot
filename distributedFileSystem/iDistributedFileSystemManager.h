@@ -35,7 +35,7 @@ public:
      * @param keyType
      * @return 
      */
-    virtual iDistributedFileSystem::iDFS createDistributedFileSystem(const string file_system_name, const string dfs_base_path, const size_t barrel_size) = 0;
+    virtual iDistributedFileSystem::iDFS createDistributedFileSystem(const string file_system_name, const size_t barrel_size) = 0;
     
     /**
      * Get a reference to the given distributed file system.
@@ -43,7 +43,7 @@ public:
      * @param file_system_name
      * @return 
      */
-    virtual iDistributedFileSystem::iDFS getFileSystem(const string file_system_name) = 0;
+    virtual iDistributedFileSystem::iDFS getDistributedFileSystem(const string file_system_name) = 0;
 
 };
 
@@ -58,9 +58,9 @@ public:
     ~DistributedFileSystemManager() {
     }
 
-    iDistributedFileSystem::iDFS createDistributedFileSystem(const string file_system_name, const string dfs_base_path, const size_t barrel_size);
+    iDistributedFileSystem::iDFS createDistributedFileSystem(const string file_system_name, const size_t barrel_size);
     
-    iDistributedFileSystem::iDFS getFileSystem(const string file_system_name);
+    iDistributedFileSystem::iDFS getDistributedFileSystem(const string file_system_name);
 };
 
 

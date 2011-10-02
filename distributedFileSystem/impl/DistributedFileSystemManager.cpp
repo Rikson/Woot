@@ -29,11 +29,11 @@ DistributedFileSystemManager :: DistributedFileSystemManager(const string root_p
     }
 }
 
-iDistributedFileSystem::iDFS DistributedFileSystemManager::createDistributedFileSystem(const string file_system_name, const string dfs_base_path, const size_t barrel_size) {
+iDistributedFileSystem::iDFS DistributedFileSystemManager::createDistributedFileSystem(const string file_system_name, const size_t barrel_size) {
     return iDistributedFileSystem::iDFS(new DistributedFileSystem(file_system_name, this->root_path, barrel_size));
 }
 
-iDistributedFileSystem::iDFS DistributedFileSystemManager::getFileSystem(const string file_system_name) {
+iDistributedFileSystem::iDFS DistributedFileSystemManager::getDistributedFileSystem(const string file_system_name) {
     
 }
 

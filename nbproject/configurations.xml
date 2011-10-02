@@ -13,14 +13,17 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>dictionary/impl/CountDictionary.cpp</itemPath>
+      <itemPath>dictionary/impl/CountDictionaryManager.cpp</itemPath>
       <itemPath>include/impl/DeTemplatizer.cpp</itemPath>
       <itemPath>dictionary/impl/Dictionary.cpp</itemPath>
+      <itemPath>dictionary/impl/DictionaryManager.cpp</itemPath>
       <itemPath>distributedFileSystem/impl/DistributedFileSystem.cpp</itemPath>
       <itemPath>distributedFileSystem/impl/DistributedFileSystemManager.cpp</itemPath>
       <itemPath>parser/Document.h</itemPath>
       <itemPath>parser/DocumentBuilderFactory.h</itemPath>
       <itemPath>include/impl/FileManager.cpp</itemPath>
       <itemPath>include/FileManager.h</itemPath>
+      <itemPath>indexer/impl/Indexer.cpp</itemPath>
       <itemPath>parser/transformer/LowerCaseTransformer.cpp</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
@@ -34,7 +37,9 @@
       <itemPath>include/constants.h</itemPath>
       <itemPath>falcon.cpp</itemPath>
       <itemPath>dictionary/iCountDictionary.h</itemPath>
+      <itemPath>dictionary/iCountDictionaryManager.h</itemPath>
       <itemPath>dictionary/iDictionary.h</itemPath>
+      <itemPath>dictionary/iDictionaryManager.h</itemPath>
       <itemPath>distributedFileSystem/iDistributedFileSystem.h</itemPath>
       <itemPath>distributedFileSystem/iDistributedFileSystemManager.h</itemPath>
       <itemPath>parser/iDocument.h</itemPath>

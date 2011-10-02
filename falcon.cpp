@@ -10,6 +10,8 @@
 #include "dictionary/iDictionary.h"
 #include "dictionary/iCountDictionary.h"
 #include "parser/SemWikiGenerator.h"
+#include "dictionary/iDictionaryManager.h"
+#include "dictionary/iCountDictionaryManager.h"
 
 #include <iostream>
 #include <string>
@@ -25,15 +27,25 @@ static string DATA_FILESYSTEM_BASE_PATH;
 static string DISTRIBUTED_FILESYSTEM_BASE_PATH_INDEX;
 static string DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY;
 static int BARREL_SIZE;
+bool LOGGING_ENABLED;
 
 /*
  * Falcon
  */
 int main(int argc, char** argv) {
 
-    cout << "Reading Configuration File" << endl;
-
     FileManager manager;
+
+    if (argc != 3) {
+        cout << "Please enter only 2 arguments for executing Falcon" << endl;
+        cout << "Usage: falcon [OPTION] <configuration-file-with-path>" << endl;
+        cout << "       [OPTION]      [FUNCTION]" << endl;
+        cout << "         -i        Indexing Mode" << endl;
+        cout << "         -r        Retrieving Mode" << endl;
+        exit(0);
+    }
+
+    string mode = argv[1];
     string cfg_filename = argv[2];
     string configFileContents = manager.readFile(cfg_filename);
     DeTemplatizer deTemplatizer;
@@ -42,10 +54,27 @@ int main(int argc, char** argv) {
 
     DATA_FILESYSTEM_BASE_PATH = configParams[0];
     DISTRIBUTED_FILESYSTEM_BASE_PATH_INDEX = configParams[1];
-    DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY = configParams[2].substr(0, configParams[2].size() - 1);
+    DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY = configParams[2].substr(0, configParams[2].size());
     BARREL_SIZE = 10; //configParams[3];
 
-    // configFileContents[3,4...] = To be handled
+    string modeChar = mode.substr(1, mode.size());
+    if (modeChar == "help") {
+        cout << "Usage: falcon [OPTION] <configuration-file-with-path>" << endl;
+        cout << "       [OPTION]      [FUNCTION]\n";
+        cout << "         -i        Indexing Mode\n";
+        cout << "         -r        Retrieving Mode\n";
+        exit(0);
+    }
+    if (mode.substr(1, mode.size()) != "i" && mode.substr(1, mode.size()) != "r") {
+        cout << "falcon: invalid option -- '" << modeChar << "'\n";
+        cout << "Try `falcon -help' for more information.\n";
+        exit(0);
+    }
+
+    cout << "Mode Selected: " << mode << "\n";
+    cout << "Data FileSystem Base Path: " << DATA_FILESYSTEM_BASE_PATH << "\n";
+    cout << "Base Path Dictionary: " << DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY << "\n";
+    cout << "Base Path Index: " << DISTRIBUTED_FILESYSTEM_BASE_PATH_INDEX << "\n";
 
     iDocumentBuilder::iDocBlr plainTextDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(0);
     iDocumentBuilder::iDocBlr wikiDocumentBuilder = DocumentBuilderFactory::getDocumentBuilder(1);
@@ -63,19 +92,23 @@ int main(int argc, char** argv) {
     // Initializing Tokenizer
     iTokenizer::iTkz tokenizer = iTokenizer::iTkz(new Tokenizer());
 
-    iDictionary::iDtr fileDictionary = iDictionary::iDtr(new Dictionary("File Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    iDictionary::iDtr termDictionary = iDictionary::iDtr(new Dictionary("Term Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    
-    iCountDictionary::iCDtr termCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Term Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    iCountDictionary::iCDtr rawTokenCountDictionary = iCountDictionary::iCDtr(new CountDictionary("Raw Token Count Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    iDistributedFileSystemManager::iDFSM DFSM = iDistributedFileSystemManager::iDFSM(new DistributedFileSystemManager(DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+    iDictionaryManager::iDtrMgr DtrMgr = iDictionaryManager::iDtrMgr(new DictionaryManager(DFSM));
+    iCountDictionaryManager::iCDtrMgr CDtrMgr = iCountDictionaryManager::iCDtrMgr(new CountDictionaryManager(DFSM));
 
-    iDictionary::iDtr authorDictionary = iDictionary::iDtr(new Dictionary("Author Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    iDictionary::iDtr categoryDictionary = iDictionary::iDtr(new Dictionary("Category Dictionary", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    
-    iDistributedFileSystem::iDFS linkRepository = iDistributedFileSystem::iDFS(new DistributedFileSystem("Link Repository", DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY, 1000000));
-    
-    SemWikiGenerator::iSWG semWikiGenerator = SemWikiGenerator::iSWG(new SemWikiGenerator (DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
-    
+    iDictionary::iDtr fileDictionary = DtrMgr->createDictionary("File Dictionary", 1000000);
+    iDictionary::iDtr termDictionary = DtrMgr->createDictionary("Term Dictionary", 1000000);
+
+    iCountDictionary::iCDtr termCountDictionary = CDtrMgr->createDictionary("Term Count Dictionary", 1000000);
+    iCountDictionary::iCDtr rawTokenCountDictionary = CDtrMgr->createDictionary("Raw Token Count Dictionary", 1000000);
+
+    iDictionary::iDtr authorDictionary = DtrMgr->createDictionary("Author Dictionary", 1000000);
+    iDictionary::iDtr categoryDictionary = DtrMgr->createDictionary("Category Dictionary", 1000000);
+
+    iDistributedFileSystem::iDFS linkRepository = DFSM->createDistributedFileSystem("Link Repository", 1000000);
+
+    SemWikiGenerator::iSWG semWikiGenerator = SemWikiGenerator::iSWG(new SemWikiGenerator(DISTRIBUTED_FILESYSTEM_BASE_PATH_DICTIONARY));
+
     // Loading and Initializing the Plain and Wiki Text Parser
     PlainTextParser* plainTextParser = new PlainTextParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary);
     WikiParser* wikiParser = new WikiParser(transformers, filters, tokenizer, termDictionary, termCountDictionary, rawTokenCountDictionary, authorDictionary, categoryDictionary, linkRepository, semWikiGenerator);
@@ -92,7 +125,7 @@ int main(int argc, char** argv) {
         iDocument::iDoc plainTextDocument = plainTextDocumentBuilder->build(*nIt);
         vector<string> result = plainTextParser->parse(plainTextDocument);
     }
-    
+
     // Wiki data
     vector<string> wikiFiles = fileManager.listFilesInDirectory(DATA_FILESYSTEM_BASE_PATH + "/wiki");
     vector<string>::iterator wIt;
