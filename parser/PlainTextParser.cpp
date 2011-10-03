@@ -15,6 +15,8 @@
 #include "PlainTextDocument.h"
 #include "tokenizer/iTokenizer.h"
 
+using tr1::hash;
+
 /**
  * State machine.
  * 
@@ -22,16 +24,21 @@
  * @param text
  * @return 
  */
-vector<string> PlainTextParser::parse(iDocument::iDoc document) {
+dense_hash_map<unsigned int, string, hash<int>, eq> PlainTextParser::parse(iDocument::iDoc document) {
     string text = document->getContents();
-    string documentName = document->getDocumentName();
-    vector<string> result;
+    dense_hash_map<unsigned int, string, hash<int>, eq> result;
+    result.set_empty_key(0);
+    result.set_deleted_key(-1);
 
     string word;
     string token;
+    unsigned int docID;
+    unsigned int termID;
     int index;
     int state = start;
     bool control;
+
+    docID = this->addToFileDictionary(document->getFilepath());
 
     for (index = 0; index < text.length();) {
         switch (state) {
@@ -62,7 +69,7 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
                             break;
 
                         case '-':
-                            
+
                         case '?':
 
                         case '(':
@@ -90,9 +97,11 @@ vector<string> PlainTextParser::parse(iDocument::iDoc document) {
             case tokenize:
                 token = this->tokenizeWord(word);
             case end:
-                result.push_back(token);
-                this->addToTermDictionary(token);
+                termID = this->addToTermDictionary(token);
+                result[termID] = token;
                 this->addToTermCountDictionary(token);
+
+                this->addToInvertedIndex(termID, docID);
             default:
                 break;
         }
@@ -169,8 +178,12 @@ int PlainTextParser::wordDelimiter(const char c) {
     return -1;
 }
 
-void PlainTextParser::addToTermDictionary(const string token) {
-    this->termDictionary->add(token);
+unsigned int PlainTextParser::addToFileDictionary(const string file) {
+    return this->fileDictionary->add(file);
+}
+
+unsigned int PlainTextParser::addToTermDictionary(const string token) {
+    return this->termDictionary->add(token);
 }
 
 void PlainTextParser::addToTermCountDictionary(const string token) {
@@ -179,4 +192,8 @@ void PlainTextParser::addToTermCountDictionary(const string token) {
 
 void PlainTextParser::addToRawCountDictionary(const string rawToken) {
     this->rawTokenCountdictionary->add(rawToken);
+}
+
+void PlainTextParser::addToInvertedIndex(unsigned int termID, unsigned int docID) {
+    this->invertedIndexer->put(termID, docID);
 }

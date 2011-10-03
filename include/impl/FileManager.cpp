@@ -144,3 +144,15 @@ vector<string> FileManager::listFilesInDirectory(string path) {
     closedir(dir);
     return directoryEntries;
 }
+
+bool FileManager::deleteDirectory(string path){
+       string filepath = "rm -r \""+path + "\"";
+       if(system(filepath.c_str()) != 0 ){
+               perror("Error deleting file");
+       }
+       else{
+               //puts("File successfully deleted");
+               return 1;
+       }
+       return 0;
+};

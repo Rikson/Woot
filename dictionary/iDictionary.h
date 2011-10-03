@@ -28,7 +28,7 @@ public:
     
     virtual int getKey (const string value) = 0;
     
-    virtual void add (const string value) = 0;
+    virtual unsigned int add (const string value) = 0;
     
     virtual void flush() = 0;
     
@@ -55,7 +55,7 @@ public:
     
     int getKey (const string value);
     
-    void add (const string value);
+    unsigned int add (const string value);
     
     int size();
     

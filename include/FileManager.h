@@ -50,6 +50,8 @@ public:
     vector<string> listFilesInDirectory(string path);
   
     bool findIfExists(string filename);
+    
+    bool deleteDirectory(string path);
 };
 
 #endif /* FILEMANAGER_H_ */

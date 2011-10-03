@@ -7,8 +7,6 @@
 #include <vector>
 using namespace std;
 static int count = 0;
-const string CODE = "003";
-const string DELIMITER = ":";
 const string METADATA_FILE = "metadata.info";
 
 /**

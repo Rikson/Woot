@@ -8,12 +8,14 @@
 #include <cmath>
 #include <stack>
 #include <map>
+#include <vector>
 #include <set>
 #include <boost/algorithm/string.hpp>
 #include "iParser.h"
 #include "../include/FileManager.h"
 
 using namespace boost;
+using tr1::hash;
 
 /**
  * State machine.
@@ -24,13 +26,20 @@ using namespace boost;
  * @param text
  * @return 
  */
-vector<string> WikiParser::parse(iDocument::iDoc document) {
+dense_hash_map<unsigned int, string, tr1::hash<int>, eq> WikiParser::parse(iDocument::iDoc document) {
     string text = document->getContents();
     string documentName = document->getDocumentName();
-    vector<string> result;
-
+    dense_hash_map<unsigned int, string, tr1::hash<int>, eq> result;
+    dense_hash_map< unsigned int, set<int>, tr1::hash<int>, eq > postings;
+    result.set_empty_key(0);
+    result.set_deleted_key(-1);
+    postings.set_empty_key(0);
+    postings.set_deleted_key(-1);
+    
     string word;
     string token;
+    unsigned int docID;
+    unsigned int termID;
     string metainfo;
     string highlevelSection;
     string metaboxinfo;
@@ -53,6 +62,9 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
     sectionIndex[1] = 0;
     sectionIndex[2] = 0;
     sectionIndex[3] = 0;
+    
+    docID = this->addToFileDictionary(document->getFilepath());
+    
     for (index = 0; index < text.length();) {
         switch (state) {
             case start:
@@ -87,7 +99,8 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                                 highlevelSections.insert((pair<string, string > (highlevelSectionStack.top(), highlevelSection)));
 
                                 if (boost::iequals(highlevelSectionStack.top(), "Author")) {
-                                    this->authorDictionary->add(highlevelSection);
+                                    unsigned int authorID = this->authorDictionary->add(highlevelSection);
+                                    this->authorIndexer->put(authorID ,docID);
                                 }
 
                                 highlevelSectionStack.pop();
@@ -212,7 +225,8 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
                                 if (iequals("category:", text.substr(k, 9))) {
                                     string category = text.substr(k + 9, j - (k + 9));
                                     categories.insert(category);
-                                    this->categoryDictionary->add(category);
+                                    unsigned int categoryID = this->categoryDictionary->add(category);
+                                    this->categoryIndexer->put(categoryID, docID);
                                 }
 
                                 index += 2;
@@ -274,12 +288,21 @@ vector<string> WikiParser::parse(iDocument::iDoc document) {
             case tokenize:
                 token = this->tokenizeWord(word);
             case end:
-                result.push_back(token);
-                this->addToTermDictionary(token);
+                termID = this->addToTermDictionary(token);
+                result[termID] = token;
+                postings[termID].insert(index - word.length());
                 this->addToTermCountDictionary(token);
+
+                this->addToInvertedIndex(termID, docID);
             default:
                 break;
         }
+    }
+    
+    dense_hash_map<unsigned int, set<int>, tr1::hash<int>, eq>::iterator itr;
+    
+    for (itr = postings.begin(); itr != postings.end(); itr++) {
+        this->forwardIndexer->put(docID, (*itr).first, (*itr).second);
     }
 
     if (!highlevelSection.empty() && !highlevelSectionStack.empty()) {
@@ -312,7 +335,7 @@ void WikiParser::addToLinkRepository(const string documentName, set<string> link
         }
     }
     
-    // Type case from unsigned long int to unsigned int to reduce the hash range.
+    // Type case from unsigned long int to unsigned int to reduce the tr1::hash range.
     unsigned int key = hash(documentName);
     
     this->linkRepository->put(key, linkstream.str());

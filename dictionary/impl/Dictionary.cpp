@@ -21,13 +21,15 @@ int Dictionary::getKey (const string value) {
     return key;
 }
 
-void Dictionary::add(const string value) {
+unsigned int Dictionary::add(const string value) {
     hash<string> hash;
     
     // Type case from unsigned long int to unsigned int to reduce the hash range.
     unsigned int key = hash(value);
     
     this->DFS->put(key, value);
+    
+    return key;
 }
 
 void Dictionary::flush() {

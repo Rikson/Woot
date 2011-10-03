@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/parser/SemWikiGenerator.o \
-	${OBJECTDIR}/indexer/impl/Indexer.o \
 	${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o \
 	${OBJECTDIR}/dictionary/impl/DictionaryManager.o \
 	${OBJECTDIR}/dictionary/impl/CountDictionaryManager.o \
@@ -45,8 +44,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/falcon.o \
 	${OBJECTDIR}/parser/WikiParser.o \
 	${OBJECTDIR}/include/impl/DeTemplatizer.o \
-	${OBJECTDIR}/dictionary/impl/Dictionary.o \
 	${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o \
+	${OBJECTDIR}/indexer/impl/InvertedIndexer.o \
+	${OBJECTDIR}/dictionary/impl/Dictionary.o \
+	${OBJECTDIR}/indexer/impl/ForwardIndexer.o \
 	${OBJECTDIR}/dictionary/impl/CountDictionary.o \
 	${OBJECTDIR}/include/impl/FileManager.o \
 	${OBJECTDIR}/parser/filter/StopWordFilter.o \
@@ -81,11 +82,6 @@ ${OBJECTDIR}/parser/SemWikiGenerator.o: parser/SemWikiGenerator.cpp
 	${MKDIR} -p ${OBJECTDIR}/parser
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/SemWikiGenerator.o parser/SemWikiGenerator.cpp
-
-${OBJECTDIR}/indexer/impl/Indexer.o: indexer/impl/Indexer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/indexer/impl
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/indexer/impl/Indexer.o indexer/impl/Indexer.cpp
 
 ${OBJECTDIR}/distributedFileSystem/impl/DistributedFileSystemManager.o: distributedFileSystem/impl/DistributedFileSystemManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/distributedFileSystem/impl
@@ -132,15 +128,25 @@ ${OBJECTDIR}/include/impl/DeTemplatizer.o: include/impl/DeTemplatizer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/include/impl/DeTemplatizer.o include/impl/DeTemplatizer.cpp
 
+${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o: parser/tokenizer/impl/Tokenizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/parser/tokenizer/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o parser/tokenizer/impl/Tokenizer.cpp
+
+${OBJECTDIR}/indexer/impl/InvertedIndexer.o: indexer/impl/InvertedIndexer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/indexer/impl
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/indexer/impl/InvertedIndexer.o indexer/impl/InvertedIndexer.cpp
+
 ${OBJECTDIR}/dictionary/impl/Dictionary.o: dictionary/impl/Dictionary.cpp 
 	${MKDIR} -p ${OBJECTDIR}/dictionary/impl
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/dictionary/impl/Dictionary.o dictionary/impl/Dictionary.cpp
 
-${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o: parser/tokenizer/impl/Tokenizer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/parser/tokenizer/impl
+${OBJECTDIR}/indexer/impl/ForwardIndexer.o: indexer/impl/ForwardIndexer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/indexer/impl
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/parser/tokenizer/impl/Tokenizer.o parser/tokenizer/impl/Tokenizer.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/indexer/impl/ForwardIndexer.o indexer/impl/ForwardIndexer.cpp
 
 ${OBJECTDIR}/dictionary/impl/CountDictionary.o: dictionary/impl/CountDictionary.cpp 
 	${MKDIR} -p ${OBJECTDIR}/dictionary/impl

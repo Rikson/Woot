@@ -23,7 +23,8 @@
       <itemPath>parser/DocumentBuilderFactory.h</itemPath>
       <itemPath>include/impl/FileManager.cpp</itemPath>
       <itemPath>include/FileManager.h</itemPath>
-      <itemPath>indexer/impl/Indexer.cpp</itemPath>
+      <itemPath>indexer/impl/ForwardIndexer.cpp</itemPath>
+      <itemPath>indexer/impl/InvertedIndexer.cpp</itemPath>
       <itemPath>parser/transformer/LowerCaseTransformer.cpp</itemPath>
       <itemPath>parser/PlainTextDocument.h</itemPath>
       <itemPath>parser/PlainTextParser.cpp</itemPath>
